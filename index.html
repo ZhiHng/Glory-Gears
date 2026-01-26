@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <section id="login" class="tab-content">
+        <form action="#home" method="get">
+        <h2>Login</h2>
+        <div class="input-group">
+            <label for="username"></label>
+            <input type="text" id="username" name="username" required placeholder="Name">
+        </div>
+        <div class="input-group">
+            <label for="password"></label>
+            <input type="password" id="password" name="password" required placeholder="Password">
+        </div>
+        <button type="submit">Login</button>
+        </form>
+        <a href=#signup class="tab-link">Sign Up</a>
+    </section>
+    <section id="signup" class="tab-content">
+        <form action="#login" method="get">
+        <h2>Sign Up</h2>
+        <div class="input-group">
+            <label for="username"></label>
+            <input type="text" id="username" name="username" required placeholder="Name">
+        </div>
+        <div class="input-group">
+            <label for="password"></label>
+            <input type="password" id="password" name="password" required placeholder="Password">
+        </div>
+        <button type="submit">Sign Up</button>
+        </form>
+        <a href=#login class="tab-link">Login</a>
+    </section> 
+    <section id="home" class="tab-content">
+        <nav>
+            <a href=#inventory class="tab-link">Inventory</a>
+            <a href=#archive class="tab-link">Archive</a>
+            <br>
+            <a href=#story class="tab-link">Story</a>
+            <a href=#explore class="tab-link">Explore</a>
+            <a href=#shop class="tab-link">Shop</a>
+        </nav>
+    </section>
+    <section id="inventory" class="tab-content">
+        <div class="scrollable-section">
+            <p>weapon 1</p>
+            <p>weapon 2</p>
+            <p>weapon 3</p>
+            <p>weapon 4</p>
+            <p>weapon 5</p>
+        </div>
+    </section>
+    <section id="story" class="tab-content">
+
+    </section>
+    <section id="explore" class="tab-content">
+
+    </section>
+    <section id="shop" class="tab-content">
+
+    </section>
+    <section id="archive" class="tab-content">
+
+    </section>
+</body>
+</html>

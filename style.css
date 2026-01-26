@@ -1,0 +1,8 @@
+.scrollable-section {
+    height: 200px; 
+    width: 100%;
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    border: 1px solid #ccc;
+    padding: 10px;
+}
