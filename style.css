@@ -1,8 +1,78 @@
 .scrollable-section {
     height: 200px; 
-    width: 100%;
+    width: 100px;
     overflow-y: auto; 
     overflow-x: hidden; 
     border: 1px solid #ccc;
     padding: 10px;
+}
+
+.tab-link {
+    display: inline-block;
+    padding: 7.5px 15px;
+    background-color: gray;
+    color: white;
+    border-radius: 6px;
+}
+
+.bghome {
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 100vh;
+    background: url("pictures/shop.png") center / cover no-repeat;
+    z-index: -1;
+}
+
+.bggrass {
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 100vh;
+    background: url("pictures/grassyplains.png") center / cover no-repeat;
+    z-index: -1;
+}
+
+.bgcave {
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    background: url("pictures/cavefinal.png") center / cover no-repeat;
+    z-index: -1;
+}
+
+.bgforest{
+    background-position: center;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    background: url("pictures/forest.png") center / cover no-repeat;
+    z-index: -1;
+}
+
+.bgarchive {
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    background: url("pictures/archive.png") center / cover no-repeat;
+    z-index: -1;
+}
+
+.text-box {
+    top: 50%;
+    left: 50%;
+    background-color: rgba(128, 128, 128, 0.6);
+    border-radius: 8px;
+}
+
+.archivebutton {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 150px;
+    height: 100px;
+    padding: 1rem;
 }

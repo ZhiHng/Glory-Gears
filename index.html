@@ -6,6 +6,7 @@
     <title>Document</title>
     <link href="style.css" rel="stylesheet">
 </head>
+
 <body>
     <section id="login" class="tab-content">
         <form action="#home" method="get">
@@ -20,8 +21,9 @@
         </div>
         <button type="submit">Login</button>
         </form>
-        <a href=#signup class="tab-link">Sign Up</a>
+        <a href=#signup class="lisi-link">Sign Up</a>
     </section>
+
     <section id="signup" class="tab-content">
         <form action="#login" method="get">
         <h2>Sign Up</h2>
@@ -35,9 +37,11 @@
         </div>
         <button type="submit">Sign Up</button>
         </form>
-        <a href=#login class="tab-link">Login</a>
+        <a href=#login class="lisi-link">Login</a>
     </section> 
+
     <section id="home" class="tab-content">
+        <div class="bghome"></div>
         <nav>
             <a href=#inventory class="tab-link">Inventory</a>
             <a href=#archive class="tab-link">Archive</a>
@@ -47,26 +51,97 @@
             <a href=#shop class="tab-link">Shop</a>
         </nav>
     </section>
-    <section id="inventory" class="tab-content">
+
+    <section id="inventoryweapon" class="tab-content">
+        <a class="tab-link">Weapons</a><a class="tab-link" href=#inventorymaterial>Materials</a>
         <div class="scrollable-section">
             <p>weapon 1</p>
             <p>weapon 2</p>
             <p>weapon 3</p>
             <p>weapon 4</p>
             <p>weapon 5</p>
+            <p>weapon 6</p>
+            <p>weapon 7</p>
+            <p>weapon 8</p>
+            <p>weapon 9</p>
+            <p>weapon 10</p>
+            <p>weapon 11</p>
         </div>
     </section>
+
+    <section id="inventorymaterial" class="tab-content">
+        <a class="tab-link" href=#inventoryweapon>Weapons</a><a class="tab-link">Materials</a>
+        <div class="scrollable-section">
+            <p>materail 1</p>
+            <p>material 2</p>
+            <p>material 3</p>
+            <p>material 4</p>
+            <p>material 5</p>
+        </div>
+    </section>
+
     <section id="story" class="tab-content">
-
+        <div class="bgforest"></div>
+        <div class="text-box">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        </div>
+        <button class="options">Option 1</button><button class="options">Option 2</button>
     </section>
+
     <section id="explore" class="tab-content">
-
+        <div class="bggrass"></div>
+        <div class="bgcave"></div>
+        <div class="text-box">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit 
+        </div>
+        <button class="option">Grassy Plains</button><button class="option">Cave</button>
     </section>
-    <section id="shop" class="tab-content">
 
+    <section id="shopbuy" class="tab-content">
+        <a class="tab-link">Buy</a><a class="tab-link" href=#shopsell>Sell</a>
+        <div class="scrollable-section">
+            <p>Item 1</p>
+            <p>cleaning Equipment</p>
+            <p>weapon 3</p>
+            <p>weapon 4</p>
+            <p>weapon 5</p>
+            <p>weapon 6</p>
+            <p>weapon 7</p>
+            <p>weapon 8</p>
+            <p>weapon 9</p>
+            <p>weapon 10</p>
+            <p>weapon 11</p>
+        </div>
     </section>
+
+    <section id="shopsell" class="tab-content">
+        <a class="tab-link" href=#shopbuy>Buy</a><a class="tab-link">Sell</a>
+        <div class="scrollable-section">
+            <p>Item 1</p>
+            <p>cleaning Equipment</p>
+            <p>weapon 3</p>
+            <p>weapon 4</p>
+            <p>weapon 5</p>
+            <p>weapon 6</p>
+            <p>weapon 7</p>
+            <p>weapon 8</p>
+            <p>weapon 9</p>
+            <p>weapon 10</p>
+            <p>weapon 11</p>
+        </div>
+    </section>
+
     <section id="archive" class="tab-content">
-
+        <div class="bgarchive"></div>
+        <div class="archivebutton">
+            <button>Chapter 1: A strange sword</button>
+            <button>Chapter 2: Race to the fire scythe</button>
+            <button>Chapter 3: The bow in the sky</button>
+            <button>Chapter 4: The lone clone</button>
+            <button>Chapter 5: The staff in the depths</button>
+            <button>Chapter 6: Final Clash</button>
+            <button>Heroes Battle</button>
+        </div>
     </section>
 </body>
 </html>
