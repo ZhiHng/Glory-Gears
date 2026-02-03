@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Glory Gears</title>
+    <link href="Normalize.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 </head>
 
@@ -13,15 +14,15 @@
         <h2>Login</h2>
         <div class="input-group">
             <label for="username"></label>
-            <input type="text" id="username" name="username" required placeholder="Name">
+            <input type="text" id="username-login" name="username" required placeholder="Name">
         </div>
         <div class="input-group">
             <label for="password"></label>
-            <input type="password" id="password" name="password" required placeholder="Password">
+            <input type="password" id="password-login" name="password" required placeholder="Password">
         </div>
         <button type="submit">Login</button>
         </form>
-        <a href=#signup class="lisi-link">Sign Up</a>
+        <a href=#signup class="tab-link">Sign Up</a>
     </section>
 
     <section id="signup" class="tab-content">
@@ -29,15 +30,15 @@
         <h2>Sign Up</h2>
         <div class="input-group">
             <label for="username"></label>
-            <input type="text" id="username" name="username" required placeholder="Name">
+            <input type="text" id="username-signup" name="username" required placeholder="Name">
         </div>
         <div class="input-group">
             <label for="password"></label>
-            <input type="password" id="password" name="password" required placeholder="Password">
+            <input type="password" id="password-signup" name="password" required placeholder="Password">
         </div>
         <button type="submit">Sign Up</button>
         </form>
-        <a href=#login class="lisi-link">Login</a>
+        <a href=#login class="tab-link">Login</a>
     </section> 
 
     <section id="home" class="tab-content">
@@ -51,33 +52,34 @@
             <a href=#shop class="tab-link">Shop</a>
         </nav>
     </section>
+    <section id="inventory" class="tab-content">
+        <section id="inventoryweapon" class="sub-tab-content">
+            <a class="sub-tab-link">Weapons</a><a class="sub-tab-link" href=#inventorymaterial>Materials</a>
+            <div class="scrollable-section">
+                <p>weapon 1</p>
+                <p>weapon 2</p>
+                <p>weapon 3</p>
+                <p>weapon 4</p>
+                <p>weapon 5</p>
+                <p>weapon 6</p>
+                <p>weapon 7</p>
+                <p>weapon 8</p>
+                <p>weapon 9</p>
+                <p>weapon 10</p>
+                <p>weapon 11</p>
+            </div>
+        </section>
 
-    <section id="inventoryweapon" class="tab-content">
-        <a class="tab-link">Weapons</a><a class="tab-link" href=#inventorymaterial>Materials</a>
-        <div class="scrollable-section">
-            <p>weapon 1</p>
-            <p>weapon 2</p>
-            <p>weapon 3</p>
-            <p>weapon 4</p>
-            <p>weapon 5</p>
-            <p>weapon 6</p>
-            <p>weapon 7</p>
-            <p>weapon 8</p>
-            <p>weapon 9</p>
-            <p>weapon 10</p>
-            <p>weapon 11</p>
-        </div>
-    </section>
-
-    <section id="inventorymaterial" class="tab-content">
-        <a class="tab-link" href=#inventoryweapon>Weapons</a><a class="tab-link">Materials</a>
-        <div class="scrollable-section">
-            <p>materail 1</p>
-            <p>material 2</p>
-            <p>material 3</p>
-            <p>material 4</p>
-            <p>material 5</p>
-        </div>
+        <section id="inventorymaterial" class="sub-tab-content">
+            <a class="sub-tab-link" href=#inventoryweapon>Weapons</a><a class="sub-tab-link">Materials</a>
+            <div class="scrollable-section">
+                <p>materail 1</p>
+                <p>material 2</p>
+                <p>material 3</p>
+                <p>material 4</p>
+                <p>material 5</p>
+            </div>
+        </section>
     </section>
 
     <section id="story" class="tab-content">
@@ -97,38 +99,40 @@
         <button class="option">Grassy Plains</button><button class="option">Cave</button>
     </section>
 
-    <section id="shopbuy" class="tab-content">
-        <a class="tab-link">Buy</a><a class="tab-link" href=#shopsell>Sell</a>
-        <div class="scrollable-section">
-            <p>Item 1</p>
-            <p>cleaning Equipment</p>
-            <p>weapon 3</p>
-            <p>weapon 4</p>
-            <p>weapon 5</p>
-            <p>weapon 6</p>
-            <p>weapon 7</p>
-            <p>weapon 8</p>
-            <p>weapon 9</p>
-            <p>weapon 10</p>
-            <p>weapon 11</p>
-        </div>
-    </section>
+    <section id="shop" class="tab-content">
+        <section id="shopbuy" class="sub-tab-content">
+            <a class="sub-tab-link">Buy</a><a class="sub-tab-link" href=#shopsell>Sell</a>
+            <div class="scrollable-section">
+                <p>Item Buy</p>
+                <p>cleaning Equipment</p>
+                <p>weapon 3</p>
+                <p>weapon 4</p>
+                <p>weapon 5</p>
+                <p>weapon 6</p>
+                <p>weapon 7</p>
+                <p>weapon 8</p>
+                <p>weapon 9</p>
+                <p>weapon 10</p>
+                <p>weapon 11</p>
+            </div>
+        </section>
 
-    <section id="shopsell" class="tab-content">
-        <a class="tab-link" href=#shopbuy>Buy</a><a class="tab-link">Sell</a>
-        <div class="scrollable-section">
-            <p>Item 1</p>
-            <p>cleaning Equipment</p>
-            <p>weapon 3</p>
-            <p>weapon 4</p>
-            <p>weapon 5</p>
-            <p>weapon 6</p>
-            <p>weapon 7</p>
-            <p>weapon 8</p>
-            <p>weapon 9</p>
-            <p>weapon 10</p>
-            <p>weapon 11</p>
-        </div>
+        <section id="shopsell" class="sub-tab-content">
+            <a class="sub-tab-link" href=#shopbuy>Buy</a><a class="sub-tab-link">Sell</a>
+            <div class="scrollable-section">
+                <p>Item Sell</p>
+                <p>cleaning Equipment</p>
+                <p>weapon 3</p>
+                <p>weapon 4</p>
+                <p>weapon 5</p>
+                <p>weapon 6</p>
+                <p>weapon 7</p>
+                <p>weapon 8</p>
+                <p>weapon 9</p>
+                <p>weapon 10</p>
+                <p>weapon 11</p>
+            </div>
+        </section>
     </section>
 
     <section id="archive" class="tab-content">
@@ -137,11 +141,12 @@
             <button>Chapter 1: A strange sword</button>
             <button>Chapter 2: Race to the fire scythe</button>
             <button>Chapter 3: The bow in the sky</button>
-            <button>Chapter 4: The lone clone</button>
-            <button>Chapter 5: The staff in the depths</button>
+            <button>Chapter 4: The staff in the depths</button>
+            <button>Chapter 5: Trust</button>
             <button>Chapter 6: Final Clash</button>
             <button>Heroes Battle</button>
         </div>
     </section>
+    <script src="script.js" defer></script>
 </body>
 </html>

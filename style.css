@@ -15,6 +15,22 @@
     border-radius: 6px;
 }
 
+.tab-content {
+    display: none !important;
+}
+
+.tab-content.active {
+    display: block !important;
+}
+
+.sub-tab-content {
+    display: none !important;
+}
+
+.sub-tab-content.active {
+    display: block !important;
+}
+
 .bghome {
     top: 0;
     left: 0;
