@@ -36,7 +36,7 @@
     left: 0;
     width: 50vw;
     height: 100vh;
-    background: url("pictures/shop.png") center / cover no-repeat;
+    background: url("images/backgrounds/shop.png") center / cover no-repeat;
     z-index: -1;
 }
 
@@ -45,7 +45,7 @@
     left: 0;
     width: 50vw;
     height: 100vh;
-    background: url("pictures/grassyplains.png") center / cover no-repeat;
+    background: url("images/backgrounds/grasslands.png") center / cover no-repeat;
     z-index: -1;
 }
 
@@ -54,7 +54,7 @@
     right: 0;
     width: 50vw;
     height: 100vh;
-    background: url("pictures/cavefinal.png") center / cover no-repeat;
+    background: url("images/backgrounds/cave.png") center / cover no-repeat;
     z-index: -1;
 }
 
@@ -64,7 +64,7 @@
     right: 0;
     width: 50vw;
     height: 100vh;
-    background: url("pictures/forest.png") center / cover no-repeat;
+    background: url("images/backgrounds/forest.png") center / cover no-repeat;
     z-index: -1;
 }
 
@@ -73,7 +73,7 @@
     right: 0;
     width: 50vw;
     height: 100vh;
-    background: url("pictures/archive.png") center / cover no-repeat;
+    background: url("images/backgrounds/archive.png") center / cover no-repeat;
     z-index: -1;
 }
 
