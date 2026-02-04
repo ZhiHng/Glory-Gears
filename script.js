@@ -372,7 +372,7 @@ const story = {
     }
 };
 
-//INVENTORY
+//INDEX
 const weapons = {
     crystalPiercer: {
         name: "Crystal Piercer",
@@ -476,39 +476,91 @@ const weapons = {
 
 const materials = {
     sponge: {
+        name: "Sponge",
+        description: "A versatile cleaning equipment usable in many situations. Required to clean weapons and restore them to their peak condition. Can be obtained from shop and exploring.",
+        image: "",
+        price: 2
+    },
 
+    soap: {
+        name: "Soap",
+        description: "A versatile cleaning equipment usable in many situations. Required to clean weapons and restore them to their peak condition. Can be obtained from shop and exploring.",
+        price: 2
     },
 
     crystal: {
-        
+        name: "Crystal",
+        description: "An enhancement material known for being highly unpredictable in its effects produced. Can be used to enhance weapons to get passive effects. Can be obtained from shop and exploring.",
+        price: 30
     },
 
     flameGem: {
-        
+        name: "Flame Gem",
+        description: "A precious gem imbued with fire elemental energy, known for producing effects that increase attack power of a weapon. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        price: 60
     },
 
     frostGem: {
-        
+        name: "Frost Gem",
+        description: "A precious gem imbued with ice elemental energy, known for producing effects that increase efficiency against certain enemy sizes. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        price: 60
     },
 
     shockGem: {
-        
+        name: "Shock Gem",
+        description: "A precious gem imbued with electric elemental energy, known for producing effects that multiplies attack power of a weapon. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        price: 60
     },
 
     energyGem: {
-        
+        name: "Energy Gem",
+        description: "A precious gem imbued with energy elemental energy, known for producing effects that increases rewards found. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        price: 60
     },
 
     ring: {
-        
+        name: "Golden ring",
+        description: "A gold ring that would fetch a high price by many. It is said to be worn by wealthy people only in the past. It does not really do much but it looks good. Can be obtained from exploring and story.",
+        price: 50
     },
 
     bracelet: {
-        
+        name: "Jade Bracelet",
+        description: "A jade bracelet that would fetch a high price by many. It is said to be worn by wealthy people only in the past. It does not really do much but it looks good. Can be obtained from exploring and story.",
+        price: 40
     },
 
     magicOrb: {
-        
+        name: "Magic Orb",
+        description: "A powerful magic orb imbued with potent elemental energy, known for producing multiple effects that increases or multiplies the attack power, efficiency against certain enemy sizes and rewards found. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        price: 100
     },
 };
 
+//REWARD DROPS
+const rewardPool = [
+    weapons.sturdyBroadsword, 
+    weapons.sturdySpear, 
+    weapons.sturdyBow, 
+    weapons.frostSpear, 
+    weapons.flameSpear, 
+    materials.sponge, 
+    materials.soap, 
+    materials.crystal, 
+    materials.flameGem, 
+    materials.frostGem, 
+    materials.shockGem, 
+    materials.energyGem, 
+    materials.ring, 
+    materials.bracelet, 
+    materials.magicOrb
+]
+
+function getReward() {
+    
+}
+//PASSIVES
+
+//DAMAGE CALCULATION
+
+//EXPLORE GENERATION
