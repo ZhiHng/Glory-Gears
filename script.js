@@ -554,13 +554,77 @@ const rewardPool = [
     materials.ring, 
     materials.bracelet, 
     materials.magicOrb
-]
+];
 
 function getReward() {
-    
+    const weights = rewardPool.map(item => 1 / item.price);
+    const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+    let roll = Math.random() * totalWeight;
+
+    for (let i = 0; i < rewardPool.length; i++) {
+        roll -= weights[i];
+        if (roll <= 0) {
+            return rewardPool[i];
+        }
+    }
 }
 //PASSIVES
+const passives = {
+    flameGem: {
+        "1": "Damage increases by 5%",
+        "2": "Damage increases by 10%",
+        "3": "Damage increases by 15%",
+        "4": "Damage increases by 20%",
+        "5": "Elemental damage increases by 5%",
+        "6": "Elemental damage increases by 10%",
+        "7": "Elemental damage increases by 15%",
+        "8": "Elemental damage increases by 20%",
+        "9": "Bow damage increases by 10%",
+        "10": "Sword damage increases by 10%",
+        "11": "Spear damage increases by 10%"
+    },
+    frostGem: {
+        "1": "Efficiency against small enemies increases by 5%",
+        "2": "Efficiency against small enemies increases by 10%",
+        "3": "Efficiency against small enemies increases by 15%",
+        "4": "Efficiency against small enemies increases by 20%",
+        "5": "Efficiency against large enemies increases by 5%",
+        "6": "Efficiency against large enemies increases by 10%",
+        "7": "Efficiency against large enemies increases by 15%",
+        "8": "Efficiency against large enemies increases by 20%",
+        "9": "Bow damage against large increases by 10%",
+        "10": "Sword damage against small increases by 10%",
+        "11": "Spear damage against small increases by 10%"
+    },
+    shockGem: {
+        "1": "Damage multiplier x1.1",
+        "2": "Damage multiplier x1.2",
+        "3": "Damage multiplier x1.4",
+        "4": "Damage multiplier x1.5",
+        "5": "Elemental damage multiplier x1.1",
+        "6": "Elemental damage multiplier x1.2",
+        "7": "Elemental damage multiplier x1.4",
+        "8": "Elemental damage multiplier x1.5",
+        "9": "Bow damage multiplier x1.3%",
+        "10": "Sword damage multiplier x1.3",
+        "11": "Spear damage multiplier x1.3"
+    },
+    energyGem: {
+        "1": "Reward drops +1",
+        "2": "Reward drops +2",
+        "3": "Reward drops +3",
+        "4": "High value reward drop chance +20%",
+        "5": "High value reward drop chance +30%",
+        "6": "High value reward drop chance +40%",
+        "7": "High value reward drop chance +50%",
+        "8": "Reward drops x2",
+        "9": "Reward drops x3",
+        "10": "Soap drop x3",
+        "11": "Sponge drop x2"
+    },
+};
 
 //DAMAGE CALCULATION
+
 
 //EXPLORE GENERATION
