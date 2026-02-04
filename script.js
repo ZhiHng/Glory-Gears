@@ -399,7 +399,7 @@ const weapons = {
     tempestArcs: {
         name: "Tempest Arcs",
         description: "A legendary mystical bow once weilded by the hero of electric. It is known for its accuracy and its ability to transform into a phoenix. Can be obtained from Chapter 3.",
-        element: "Fire",
+        element: "Electric",
         range: "Very Long",
         damage: 35,
         passive: "Winning Chance +20%",
@@ -442,6 +442,7 @@ const weapons = {
         description: "A long spear that is imbued with ice elemental powers, forged from a Frost Gem. It is capable of emmiting ice elemental attacks to a reasonable extent. Can be obtained from exploring.",
         element: "Ice",
         range: "Long",
+        damage: 16,
         passive: "Damage against small enemies +10%",
         price: 80
     },
@@ -451,6 +452,7 @@ const weapons = {
         description: "A sleek sword that is imbued with ice elemental powers, forged from a Frost Gem. It is capable of emmiting ice elemental attacks to a reasonable extent. Can be obtained from shop.",
         element: "Ice",
         range: "Short",
+        damage: 17,
         passive: "Elemental damage x1.5",
         price: 85
     },
@@ -460,6 +462,7 @@ const weapons = {
         description: "A long spear that is imbued with fire elemental powers, forged from a Flame Gem. It is capable of emmiting fire elemental attacks to a reasonable extent. Can be obtained from exploring.",
         element: "Fire",
         range: "Long",
+        damage: 17,
         passive: "Damage against large enemies + 10%",
         price: 85
     },
@@ -469,7 +472,8 @@ const weapons = {
         description: "A sleek sword that is imbued with fire elemental powers, forged from a Flame Gem. It is capable of emmiting fire elemental attacks to a reasonable extent. Can be obtained from shop.",
         element: "Fire",
         range: "Short",
-        passive: "Cleaniness damage bonus +10%",
+        damage: 18,
+        passive: "cleanliness damage bonus +10%",
         price: 80
     },
 };
@@ -625,6 +629,48 @@ const passives = {
 };
 
 //DAMAGE CALCULATION
+function getDamage(enemyElement, enemyRange) {
+    let baseDmg = weapons[player.equipped].damage;
+    let range = weapons[player.equipped].range;
+    let element = weapons[player.equipped].element;
+    let cleanliness = inventory.weapons[player.equipped].cleanliness;
 
+    if ((range === "Very Long" && (enemyRange === "Long" || enemyRange === "Short")) || (range === "Long" && enemyRange === "Short")) {
+        baseDmg += 10
+    }
+    if ((element == "Light" && enemyElement == "Dark") || (element == "Ice" && enemyElement == "Fire") || (element == "Fire" && enemyElement == "Ice") || (element == "Electric" && enemyElement == "Energy")) {
+        baseDmg *= 1.5
+    };
+    if (cleanliness == "Mild Dirty") {
+        baseDmg += 15
+    } else if (cleanliness == "Clean") {
+        baseDmg += 30
+    }
+    //Passive not being coded into damage calculation due to complexity
+    return baseDmg
+}
+
+function determineWin(enemyDamage, enemyElement, enemyRange) {
+    let totalDmg = getDamage(enemyElement, enemyRange);
+    let prob = totalDmg / enemyDamage
+    if (Math.random() <= Math.min(prob, 0.95)) {
+        return "Win";
+    } else {
+        return "Lose";
+    }
+}
 
 //EXPLORE GENERATION
+
+//PLAYER
+const player = {
+    equipped: "None"
+}
+const inventory = {
+    weapons: {
+        sturdyBroadsword: {cleanliness: "Dirty", quantity: 1}
+    },
+    materials: {
+
+    }
+}
