@@ -694,6 +694,7 @@ const encounters = {
             "Element: Water",
             "Reach: Short"
             ],
+            damage: 15,
             choices: ["Fight", "Flee"]
         },
         enemyRouge: {
@@ -702,6 +703,7 @@ const encounters = {
             "Element: None",
             "Reach: Short"
             ],
+            damage: 25,
             choices: ["Fight", "Flee"]
         },
         enemyMage: {
@@ -710,6 +712,7 @@ const encounters = {
             "Element: Fire",
             "Reach: Very Long"
             ],
+            damage: 27,
             choices: ["Fight", "Flee"]
         },
         find: {
@@ -718,6 +721,9 @@ const encounters = {
             ],
             choices: ["Continue"]
         },
+        text: "You can travel to the grasslands where there are tall grasses, bright atmosphere and an open area, the perfect place for travellers.",
+        textOption: "Continue in the grasslands",
+        audio: "audio/grassland.wav",
         image: "images/backgrounds/grasslands.png"
     },
 
@@ -736,6 +742,7 @@ const encounters = {
             "Element: None",
             "Reach: Short"
             ],
+            damage: 18,
             choices: ["Fight", "Flee"]
         },
         enemyDemon: {
@@ -744,6 +751,7 @@ const encounters = {
             "Element: Dark",
             "Reach: Short"
             ],
+            damage: 35,
             choices: ["Fight", "Flee"]
         },
         enemyWorm: {
@@ -752,6 +760,7 @@ const encounters = {
             "Element: Fire",
             "Reach: Long"
             ],
+            damage: 30,
             choices: ["Fight", "Flee"]
         },
         find: {
@@ -760,6 +769,9 @@ const encounters = {
             ],
             choices: ["Continue"]
         },
+        text: "You can travel to the desert where there may be creatures lurking within the sands. Despite the blazing and freezing temperatures, people still travel here to get from region to region.",
+        textOption: "Explore the desert",
+        audio: "audio/desert.wav",
         image: "images/backgrounds/desert.png"
     },
 
@@ -778,6 +790,7 @@ const encounters = {
             "Element: Ice",
             "Reach: Long"
             ],
+            damage: 19,
             choices: ["Fight", "Flee"]
         },
         enemyYeti: {
@@ -786,6 +799,7 @@ const encounters = {
             "Element: Ice",
             "Reach: Short"
             ],
+            damage: 29,
             choices: ["Fight", "Flee"]
         },
         enemyTheif: {
@@ -794,6 +808,7 @@ const encounters = {
             "Element: Electric",
             "Reach: Short"
             ],
+            damage: 23,
             choices: ["Fight", "Flee"]
         },
         find: {
@@ -802,6 +817,9 @@ const encounters = {
             ],
             choices: ["Continue"]
         },
+        text: "You can travel to the snow plains. People rarely travel here due to unpredictable temperature drops, leaving this region mostly unknown to people.",
+        textOption: "Brave the snow",
+        audio: "audio/snow.wav",
         image: "images/backgrounds/snow.png"
     },
 
@@ -812,6 +830,7 @@ const encounters = {
             "Element: Water",
             "Reach: Short"
             ],
+            damage: 17,
             choices: ["Fight", "Flee"]
         },
         enemyElf: {
@@ -820,6 +839,7 @@ const encounters = {
             "Element: Light",
             "Reach: Very Long"
             ],
+            damage: 25,
             choices: ["Fight", "Flee"]
         },
         enemyDemon: {
@@ -828,6 +848,7 @@ const encounters = {
             "Element: Dark",
             "Reach: Long"
             ],
+            damage: 37,
             choices: ["Fight", "Flee"]
         },
         enemyGoblin: {
@@ -836,6 +857,7 @@ const encounters = {
             "Element: None",
             "Reach: Long"
             ],
+            damage: 20,
             choices: ["Fight", "Flee"]
         },
         find: {
@@ -844,6 +866,9 @@ const encounters = {
             ],
             choices: ["Continue"]
         },
+        text: "You can travel to the forest. It is best to be careful as you never know what might lurk in the trees. It may bring you fortune, or be your nightmare.",
+        textOption: "Try your luck in the forest",
+        audio: "audio/walk.wav",
         image: "images/backgrounds/forest.png"
     },
     
@@ -854,6 +879,7 @@ const encounters = {
             "Element: None",
             "Reach: Short"
             ],
+            damage: 28,
             choices: ["Fight", "Flee"]
         },
         enemyDragon: {
@@ -862,6 +888,7 @@ const encounters = {
             "Element: Fire",
             "Reach: Long"
             ],
+            damage: 30,
             choices: ["Fight", "Flee"]
         },
         enemyShaman: {
@@ -870,6 +897,7 @@ const encounters = {
             "Element: Electric",
             "Reach: Very Long"
             ],
+            damage: 31,
             choices: ["Fight", "Flee"]
         },
         enemyGoblin: {
@@ -878,6 +906,7 @@ const encounters = {
             "Element: None",
             "Reach: Short"
             ],
+            damage: 16,
             choices: ["Fight", "Flee"]
         },
         find: {
@@ -886,6 +915,9 @@ const encounters = {
             ],
             choices: ["Continue"]
         },
+        text: "You can travel to the caves. It is relatively dark inside with creepy sounds coming from within periodically.",
+        textOption: "Enter the cave",
+        audio: "audio/cave.wav",
         image: "images/backgrounds/cave.png"
     }
 };
@@ -904,7 +936,7 @@ const player = {
 };
 const inventory = {
     weapons: {
-        sturdyBroadsword: {cleanliness: "Dirty", quantity: 1}
+        sturdyBroadsword: {cleanliness: "Dirty", passive: "None"}
     },
     materials: {
 
@@ -912,27 +944,113 @@ const inventory = {
 };
 
 //MAIN INTERACTION
+const invBtn = document.querySelector('#inv-btn');
+const archiveBtn = document.querySelector('#archive-btn');
+const storyBtn = document.querySelector('#story-btn');
+const exploreBtn = document.querySelector('#explore-btn');
+const storyOptionBtns = document.querySelector('#explore-btn');
+const exploreOptionBtns = document.querySelectorAll('.explore-option');
+const shopBtn = document.querySelector('#shop-btn');
+const exploreText = document.querySelector('#explore-text');
+const storyText = document.querySelector('#story-text');
+var energy = 5;
+
+//INVENTORY
 const inventoryWeapons = document.querySelectorAll('.invWeapon');
 const weaponsKeys = Object.keys(weapons);
 inventoryWeapons.forEach((div, i) => {
     div.querySelector('.weaponImg').style.background = `url(${weapons[weaponsKeys[i]]}) center / cover no-repeat`
 });
 
-const invBtn = querySelector('#inv-btn');
-const archiveBtn = querySelector('#archive-btn');
-const storyBtn = querySelector('#story-btn');
-const exploreBtn = querySelector('#explore-btn');
-const storyOptionBtns = querySelector('#explore-btn');
-const exploreOptionBtns = querySelector('#explore-btn');
-const shopBtn = querySelector('#shop-btn');
-const exploreText = querySelector('#explore-text');
-const storyText = querySelector('#story-text');
+//EXPLORE
+const exploreContext = {
 
-exploreOptionBtns.addEventListener('click', () => {
+}
+
+function getExploreFork() {
+    let loc1 = getRandomKeyFromObj(encounters);
+    let loc2 = getRandomKeyFromObj(encounters);
+    while (loc1 === loc2) {
+        loc2 = getRandomKeyFromObj(encounters);
+    }
+
+    exploreContext = {
+        type: "fork",
+        options: [loc1, loc2]
+    };
+
+    let finalText = `You travel for a while and come across a fork in the pathway. You can travel to two locations. <br>${encounters[loc1].text}<br>${encounters[loc2].text}`;
+    exploreText.innerHTML = finalText;
+    exploreOptionBtns[0].textContent = encounters[loc1].textOption;
+    exploreOptionBtns[1].textContent = encounters[loc2].textOption;
+};
+
+
+function resetTextExplore(location) {
+    const sceneKey = getRandomKeyFromObj(encounters[location])
+    const exploreScene = encounters[location][sceneKey];
+    let encounterType = '';
+    let enemyDmg = 0;
+    let enemyElement = "";
+    let enemyRange = "";
+    if (sceneKey.includes('enemy')) {
+        encounterType = 'fight';
+        enemyDmg = encounters[location][exploreScene].damage;
+        enemyElement = (encounters[location][exploreScene].text[1]).substring(9);
+        enemyRange = (encounters[location][exploreScene].text[2]).substring(7);
+    } else if (sceneKey.includes('trader')) {
+        encounterType = 'trade';
+    } else {
+        encounterType = 'find';
+    }
+    exploreContext = {
+        type: encounterType,
+        loc: location,
+        scene: sceneKey,
+        dmg: enemyDmg,
+        element: enemyElement,
+        range: enemyRange
+    };
+
+    let finalText = '';
+    exploreScene.text.forEach(string => {
+        finalText += string + "<br>";
+    });
+    exploreText.innerHTML = finalText
+    exploreOptionBtns[0].textContent = exploreScene.choices[0];
+    exploreOptionBtns[1].textContent = exploreScene.choices[1];
+};
+
+exploreBtn.addEventListener('click', () => {
     setActiveMainTab('explore');
+    energy = 5;
+    getExploreFork()
 });
-exploreOptionBtns.foreach(btn => {
+exploreOptionBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
-        
+        if (exploreContext.type === 'fork') {
+            resetTextExplore(exploreContext.options[i])
+        } else if (exploreContext.type === 'fight') {
+            if (determineWin(exploreContext.dmg, exploreContext.element, exploreContext.range) === "Win") {
+                addInventory(getReward());
+            }
+
+        }
     });
 });
+
+function addInventory(item) {
+    if (item.includes('Bow') || item.includes('Broadsword') || item.includes('Spear')) {
+        inventory.weapons[item] = { cleanliness: "Dirty", passive: "None" };
+    } else {
+        if (!inventory.materials[item]) {
+            inventory.materials[item] = 1;
+        } else {
+            inventory.materials[item] += 1;
+        }
+    }
+}
+//STORY
+function resetTextStory() {
+
+};
