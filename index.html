@@ -44,19 +44,19 @@
     <section id="home" class="tab-content">
         <div class="bghome"></div>
         <nav>
-            <a href=#inventory class="tab-link">Inventory</a>
-            <a href=#archive class="tab-link">Archive</a>
+            <a href=#inventory class="tab-link" id="inv-btn">Inventory</a>
+            <a href=#archive class="tab-link" id="archive-btn">Archive</a>
             <br>
-            <a href=#story class="tab-link">Story</a>
-            <a href=#explore class="tab-link">Explore</a>
-            <a href=#shop class="tab-link">Shop</a>
+            <a href=#story class="tab-link" id="story-btn">Story</a>
+            <a href=#explore class="tab-link" id="explore-btn">Explore</a>
+            <a href=#shop class="tab-link" id="shop-btn">Shop</a>
         </nav>
     </section>
     <section id="inventory" class="tab-content">
         <section id="inventoryweapon" class="sub-tab-content">
             <a class="sub-tab-link">Weapons</a><a class="sub-tab-link" href=#inventorymaterial>Materials</a>
-            <div class="scrollable-section">
-                <p>weapon 1</p>
+            <div class="scrollable-section inv-weapon">
+                <p class="weaponImg">weapon 1</p>
                 <p>weapon 2</p>
                 <p>weapon 3</p>
                 <p>weapon 4</p>
@@ -66,7 +66,6 @@
                 <p>weapon 8</p>
                 <p>weapon 9</p>
                 <p>weapon 10</p>
-                <p>weapon 11</p>
             </div>
         </section>
 
@@ -84,19 +83,19 @@
 
     <section id="story" class="tab-content">
         <div class="bgforest"></div>
-        <div class="text-box">
+        <div class="text-box" id="story-text">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit
         </div>
-        <button class="options">Option 1</button><button class="options">Option 2</button>
+        <button class="story-options">Option 1</button><button class="story-options">Option 2</button>
     </section>
 
     <section id="explore" class="tab-content">
         <div class="bggrass"></div>
         <div class="bgcave"></div>
-        <div class="text-box">
+        <div class="text-box" id="explore-text">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit 
         </div>
-        <button class="option">Grassy Plains</button><button class="option">Cave</button>
+        <button class="explore-option">Grassy Plains</button><button class="explore-option">Cave</button>
     </section>
 
     <section id="shop" class="tab-content">

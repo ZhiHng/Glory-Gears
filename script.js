@@ -1,4 +1,3 @@
-// --- MAIN TABS ---
 const links = document.querySelectorAll('.tab-link');
 const contents = document.querySelectorAll('.tab-content');
 
@@ -15,35 +14,40 @@ document.querySelectorAll('.tab-content').forEach(tab => {
     firstSubLink?.classList.add('active');
 });
 
+// --- FUNCTION TO SWITCH MAIN TAB MANUALLY ---
+function setActiveMainTab(tabId) {
+    const tab = document.getElementById(tabId);
+    const link = document.querySelector(`.tab-link[href="#${tabId}"]`);
+
+    if (!tab || !link) return;
+
+    // Deactivate all main tabs
+    contents.forEach(c => c.classList.remove('active'));
+    links.forEach(l => l.classList.remove('active'));
+
+    // Activate selected main tab
+    tab.classList.add('active');
+    link.classList.add('active');
+
+    // Reset sub-tabs inside this main tab
+    tab.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+    tab.querySelectorAll('.sub-tab-link').forEach(l => l.classList.remove('active'));
+
+    // Activate default sub-tab
+    const firstSubContent = tab.querySelector('.sub-tab-content');
+    const firstSubLink = tab.querySelector('.sub-tab-link');
+    firstSubContent?.classList.add('active');
+    firstSubLink?.classList.add('active');
+
+    window.scrollTo({ top: 0 });
+}
+
 // --- MAIN TAB CLICK ---
 links.forEach(link => {
     link.addEventListener('click', e => {
         e.preventDefault();
         const targetId = link.getAttribute('href').substring(1);
-        const tab = document.getElementById(targetId);
-        if (!tab) {
-            return;  
-        };
-
-    // Deactivate all main tabs
-        contents.forEach(c => c.classList.remove('active'));
-        links.forEach(l => l.classList.remove('active'));
-
-    // Activate clicked main tab
-        tab.classList.add('active');
-        link.classList.add('active');
-
-    // Reset sub-tabs inside this main tab
-        tab.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
-        tab.querySelectorAll('.sub-tab-link').forEach(l => l.classList.remove('active'));
-
-    // Activate default sub-tab (first one)
-        const firstSubContent = tab.querySelector('.sub-tab-content');
-        const firstSubLink = tab.querySelector('.sub-tab-link');
-        firstSubContent?.classList.add('active');
-        firstSubLink?.classList.add('active');
-
-        window.scrollTo({ top: 0 });
+        setActiveMainTab(targetId);
     });
 });
 
@@ -55,20 +59,17 @@ sublinks.forEach(link => {
         e.preventDefault();
         const targetId = link.getAttribute('href').substring(1);
         const parentTab = link.closest('.tab-content');
-        if (!parentTab) {
-            return;
-        };
+        if (!parentTab) return;
 
-    // Deactivate all sub-tabs in this section
+        // Deactivate all sub-tabs in this section
         parentTab.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
         parentTab.querySelectorAll('.sub-tab-link').forEach(l => l.classList.remove('active'));
 
-    // Activate clicked sub-tab
+        // Activate clicked sub-tab
         parentTab.querySelector(`#${targetId}`)?.classList.add('active');
         link.classList.add('active');
     });
 });
-
 
 document.addEventListener("keydown", function(event) {
     switch (event.key) {
@@ -482,61 +483,70 @@ const materials = {
     sponge: {
         name: "Sponge",
         description: "A versatile cleaning equipment usable in many situations. Required to clean weapons and restore them to their peak condition. Can be obtained from shop and exploring.",
-        image: "",
+        image: "images/materials/sponge.jpeg",
         price: 2
     },
 
     soap: {
         name: "Soap",
         description: "A versatile cleaning equipment usable in many situations. Required to clean weapons and restore them to their peak condition. Can be obtained from shop and exploring.",
+        image: "images/materials/soap.jpeg",
         price: 2
     },
 
     crystal: {
         name: "Crystal",
         description: "An enhancement material known for being highly unpredictable in its effects produced. Can be used to enhance weapons to get passive effects. Can be obtained from shop and exploring.",
+        image: "images/materials/crystal.jpeg",
         price: 30
     },
 
     flameGem: {
         name: "Flame Gem",
         description: "A precious gem imbued with fire elemental energy, known for producing effects that increase attack power of a weapon. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        image: "images/materials/flameGem.jpeg",
         price: 60
     },
 
     frostGem: {
         name: "Frost Gem",
         description: "A precious gem imbued with ice elemental energy, known for producing effects that increase efficiency against certain enemy sizes. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        image: "images/materials/frostGem.jpeg",
         price: 60
     },
 
     shockGem: {
         name: "Shock Gem",
         description: "A precious gem imbued with electric elemental energy, known for producing effects that multiplies attack power of a weapon. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        image: "images/materials/shockGem.jpeg",
         price: 60
     },
 
     energyGem: {
         name: "Energy Gem",
         description: "A precious gem imbued with energy elemental energy, known for producing effects that increases rewards found. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        image: "images/materials/energyGem.jpeg",
         price: 60
     },
 
     ring: {
         name: "Golden ring",
         description: "A gold ring that would fetch a high price by many. It is said to be worn by wealthy people only in the past. It does not really do much but it looks good. Can be obtained from exploring and story.",
+        image: "images/materials/goldRing.jpeg",
         price: 50
     },
 
     bracelet: {
         name: "Jade Bracelet",
         description: "A jade bracelet that would fetch a high price by many. It is said to be worn by wealthy people only in the past. It does not really do much but it looks good. Can be obtained from exploring and story.",
+        image: "images/materials/bracelet.jpeg",
         price: 40
     },
 
     magicOrb: {
         name: "Magic Orb",
         description: "A powerful magic orb imbued with potent elemental energy, known for producing multiple effects that increases or multiplies the attack power, efficiency against certain enemy sizes and rewards found. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
+        image: "images/materials/magicOrb.jpeg",
         price: 100
     },
 };
@@ -634,17 +644,16 @@ function getDamage(enemyElement, enemyRange) {
     let range = weapons[player.equipped].range;
     let element = weapons[player.equipped].element;
     let cleanliness = inventory.weapons[player.equipped].cleanliness;
-
-    if ((range === "Very Long" && (enemyRange === "Long" || enemyRange === "Short")) || (range === "Long" && enemyRange === "Short")) {
-        baseDmg += 10
-    }
-    if ((element == "Light" && enemyElement == "Dark") || (element == "Ice" && enemyElement == "Fire") || (element == "Fire" && enemyElement == "Ice") || (element == "Electric" && enemyElement == "Energy")) {
-        baseDmg *= 1.5
-    };
     if (cleanliness == "Mild Dirty") {
         baseDmg += 15
     } else if (cleanliness == "Clean") {
         baseDmg += 30
+    }
+    if ((element == "Light" && enemyElement == "Dark") || (element == "Ice" && enemyElement == "Fire") || (element == "Fire" && enemyElement == "Ice") || (element == "Electric" && enemyElement == "Energy") || (element == "Ice" && enemyElement == "Water")) {
+        baseDmg *= 1.5
+    };
+    if ((range === "Very Long" && (enemyRange === "Long" || enemyRange === "Short")) || (range === "Long" && enemyRange === "Short")) {
+        baseDmg += 10
     }
     //Passive not being coded into damage calculation due to complexity
     return baseDmg
@@ -661,11 +670,238 @@ function determineWin(enemyDamage, enemyElement, enemyRange) {
 }
 
 //EXPLORE GENERATION
+const encounters = {
+    grasslands: {
+        traderGold: {
+            text: [
+            "You come accross a wandering trader.",
+            "Trader: Hello fellow adventurer, do I have anything that interests you? Feel free to take a look around. Business has been hard these days... I just want to surprise my wife with a gift. Ya know she likes gold. Who does'nt anyways haha.",
+            "I've got a special offer for you. If you have an energy gem, i'll trade it for 3 crystals."
+            ],
+            choices: ["Buy/Sell", "Trade"]
+        },
+        traderGem: {
+            text: [
+            "You come accross a wandering trader.",
+            "Trader: Hello fellow adventurer, do I have anything that interests you? Feel free to take a look around. The other day I came accross some mages, they were carryng those staffs. They look so cool!! Especially the gems sitting on the top of the staffs.",
+            "I've got a special offer for you. If you have a gold ring, i'll trade it for 30 soap."
+            ],
+            choices: ["Buy/Sell", "Trade"]
+        },
+        enemySlime: {
+            text: [
+            "You encountered a slime.",
+            "Element: Water",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyRouge: {
+            text: [
+            "You encountered a bandit rouge.",
+            "Element: None",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyMage: {
+            text: [
+            "You encountered a bandit mage.",
+            "Element: Fire",
+            "Reach: Very Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        find: {
+            text: [
+            "You scavenge the grasslands for anything valuable.",
+            ],
+            choices: ["Continue"]
+        },
+        image: "images/backgrounds/grasslands.png"
+    },
+
+    desert: {
+        traderGem: {
+            text: [
+            "You come accross a wandering trader.",
+            "Trader: Hello fellow adventurer, do I have anything that interests you? Feel free to take a look around. It's really hot in the desert isn't it. I could really use something to cool me down.",
+            "I've got a special offer for you. If you have a shock gem, i'll trade it for a fire gem."
+            ],
+            choices: ["Buy/Sell", "Trade"]
+        },
+        enemyScorpion: {
+            text: [
+            "You encountered a scorpion.",
+            "Element: None",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyDemon: {
+            text: [
+            "You encountered a demon.",
+            "Element: Dark",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyWorm: {
+            text: [
+            "You encountered a giant sand worm.",
+            "Element: Fire",
+            "Reach: Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        find: {
+            text: [
+            "You scavenge the desert for anything valuable.",
+            ],
+            choices: ["Continue"]
+        },
+        image: "images/backgrounds/desert.png"
+    },
+
+    snow: {
+        traderWeapon: {
+            text: [
+            "You come accross a wandering trader.",
+            "Trader: Hello fellow adventurer, do I have anything that interests you? Feel free to take a look around. None of my weapons do much in this weather conditions man...",
+            "I've got a special offer for you. If you have a magic orb, i'll trade it for an ice gem and a fire gem."
+            ],
+            choices: ["Buy/Sell", "Trade"]
+        },
+        enemySpirit: {
+            text: [
+            "You encountered an ice spirit.",
+            "Element: Ice",
+            "Reach: Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyYeti: {
+            text: [
+            "You encountered a Yeti.",
+            "Element: Ice",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyTheif: {
+            text: [
+            "You encountered a theif.",
+            "Element: Electric",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        find: {
+            text: [
+            "You scavenge the snowy plains for anything valuable.",
+            ],
+            choices: ["Continue"]
+        },
+        image: "images/backgrounds/snow.png"
+    },
+
+    forest: {
+        enemyMimic: {
+            text: [
+            "You encountered an chest mimic.",
+            "Element: Water",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyElf: {
+            text: [
+            "You encountered an elf.",
+            "Element: Light",
+            "Reach: Very Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyDemon: {
+            text: [
+            "You encountered a Demon.",
+            "Element: Dark",
+            "Reach: Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyGoblin: {
+            text: [
+            "You encountered a goblin.",
+            "Element: None",
+            "Reach: Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        find: {
+            text: [
+            "You scavenge the forest for anything valuable.",
+            ],
+            choices: ["Continue"]
+        },
+        image: "images/backgrounds/forest.png"
+    },
+    
+    cave: {
+        enemyOgre: {
+            text: [
+            "You encountered a cave ogre.",
+            "Element: None",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyDragon: {
+            text: [
+            "You encountered a baby dragon.",
+            "Element: Fire",
+            "Reach: Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyShaman: {
+            text: [
+            "You encountered a Shaman.",
+            "Element: Electric",
+            "Reach: Very Long"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        enemyGoblin: {
+            text: [
+            "You encountered a goblin.",
+            "Element: None",
+            "Reach: Short"
+            ],
+            choices: ["Fight", "Flee"]
+        },
+        find: {
+            text: [
+            "You scavenge the cave for anything valuable.",
+            ],
+            choices: ["Continue"]
+        },
+        image: "images/backgrounds/cave.png"
+    }
+};
+
+function getRandomKeyFromObj(object) {
+    let keys = Object.keys(object);
+    let randomKey = keys[Math.floor(Math.random() * keys.length)];
+
+    return randomKey;
+};
+
 
 //PLAYER
 const player = {
     equipped: "None"
-}
+};
 const inventory = {
     weapons: {
         sturdyBroadsword: {cleanliness: "Dirty", quantity: 1}
@@ -673,4 +909,30 @@ const inventory = {
     materials: {
 
     }
-}
+};
+
+//MAIN INTERACTION
+const inventoryWeapons = document.querySelectorAll('.invWeapon');
+const weaponsKeys = Object.keys(weapons);
+inventoryWeapons.forEach((div, i) => {
+    div.querySelector('.weaponImg').style.background = `url(${weapons[weaponsKeys[i]]}) center / cover no-repeat`
+});
+
+const invBtn = querySelector('#inv-btn');
+const archiveBtn = querySelector('#archive-btn');
+const storyBtn = querySelector('#story-btn');
+const exploreBtn = querySelector('#explore-btn');
+const storyOptionBtns = querySelector('#explore-btn');
+const exploreOptionBtns = querySelector('#explore-btn');
+const shopBtn = querySelector('#shop-btn');
+const exploreText = querySelector('#explore-text');
+const storyText = querySelector('#story-text');
+
+exploreOptionBtns.addEventListener('click', () => {
+    setActiveMainTab('explore');
+});
+exploreOptionBtns.foreach(btn => {
+    btn.addEventListener('click', () => {
+        
+    });
+});
