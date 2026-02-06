@@ -40,22 +40,21 @@
     z-index: -1;
 }
 
-.bggrass {
+.bg-explore {
+    position: fixed;
     top: 0;
-    left: 0;
     width: 50vw;
     height: 100vh;
     background: url("images/backgrounds/grasslands.png") center / cover no-repeat;
     z-index: -1;
 }
 
-.bgcave {
-    top: 0;
+#bg-explore1 {
+    left: 0;
+}
+
+#bg-explore2 {
     right: 0;
-    width: 50vw;
-    height: 100vh;
-    background: url("images/backgrounds/cave.png") center / cover no-repeat;
-    z-index: -1;
 }
 
 .bgforest{
@@ -91,4 +90,14 @@
     width: 150px;
     height: 100px;
     padding: 1rem;
+}
+
+.explore-option {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.explore-option.active {
+    visibility: visible;
+    pointer-events: auto;
 }

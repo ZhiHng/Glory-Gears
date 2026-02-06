@@ -952,8 +952,32 @@ const storyOptionBtns = document.querySelector('#explore-btn');
 const exploreOptionBtns = document.querySelectorAll('.explore-option');
 const shopBtn = document.querySelector('#shop-btn');
 const exploreText = document.querySelector('#explore-text');
+const exploreBackground = document.querySelectorAll('.bg-explore');
 const storyText = document.querySelector('#story-text');
 var energy = 5;
+
+let currentAudio;
+
+function playAudio(src) {
+    currentAudio?.pause();
+    currentAudio = new Audio(src);
+    currentAudio.play();
+}
+
+function setExploreButtons(texts = [], active = [true, true, true]) {
+    exploreOptionBtns.forEach((btn, i) => {
+        btn.textContent = texts[i] || "";
+        btn.classList.toggle('active', !!active[i]);
+    });
+}
+
+function getRandomEncounterKey(location) {
+    const keys = Object.keys(encounters[location]).filter(
+        k => !["text", "textOption", "audio", "image"].includes(k)
+    );
+    return keys[Math.floor(Math.random() * keys.length)];
+}
+
 
 //INVENTORY
 const inventoryWeapons = document.querySelectorAll('.invWeapon');
@@ -963,11 +987,14 @@ inventoryWeapons.forEach((div, i) => {
 });
 
 //EXPLORE
-const exploreContext = {
+let exploreContext = {
 
 }
 
 function getExploreFork() {
+    currentAudio?.pause();
+    playAudio("audio/walk.wav");
+    exploreOptionBtns.forEach(i => {i.classList.add('active')});
     let loc1 = getRandomKeyFromObj(encounters);
     let loc2 = getRandomKeyFromObj(encounters);
     while (loc1 === loc2) {
@@ -981,13 +1008,14 @@ function getExploreFork() {
 
     let finalText = `You travel for a while and come across a fork in the pathway. You can travel to two locations. <br>${encounters[loc1].text}<br>${encounters[loc2].text}`;
     exploreText.innerHTML = finalText;
-    exploreOptionBtns[0].textContent = encounters[loc1].textOption;
-    exploreOptionBtns[1].textContent = encounters[loc2].textOption;
+    exploreBackground[0].style.background = `url(${encounters[loc1].image}) center / cover no-repeat`;
+    exploreBackground[1].style.background = `url(${encounters[loc2].image}) center / cover no-repeat`;
+    setExploreButtons([encounters[loc1].textOption, encounters[loc2].textOption, "Go back to town"], [true, true, true]);
 };
 
 
 function resetTextExplore(location) {
-    const sceneKey = getRandomKeyFromObj(encounters[location])
+    const sceneKey = getRandomEncounterKey(location)
     const exploreScene = encounters[location][sceneKey];
     let encounterType = '';
     let enemyDmg = 0;
@@ -995,9 +1023,9 @@ function resetTextExplore(location) {
     let enemyRange = "";
     if (sceneKey.includes('enemy')) {
         encounterType = 'fight';
-        enemyDmg = encounters[location][exploreScene].damage;
-        enemyElement = (encounters[location][exploreScene].text[1]).substring(9);
-        enemyRange = (encounters[location][exploreScene].text[2]).substring(7);
+        enemyDmg = exploreScene.damage;
+        enemyElement = exploreScene.text[1].substring(9);
+        enemyRange = exploreScene.text[2].substring(7);
     } else if (sceneKey.includes('trader')) {
         encounterType = 'trade';
     } else {
@@ -1016,9 +1044,18 @@ function resetTextExplore(location) {
     exploreScene.text.forEach(string => {
         finalText += string + "<br>";
     });
+    if (encounterType == 'fight') {
+        finalText += `Chance of victory: ${Math.min(getDamage(enemyElement, enemyRange)/enemyDmg, 0.95).toFixed(2)}`;
+    }
     exploreText.innerHTML = finalText
-    exploreOptionBtns[0].textContent = exploreScene.choices[0];
-    exploreOptionBtns[1].textContent = exploreScene.choices[1];
+    if (encounterType == "trade") {
+        setExploreButtons([exploreScene.choices[0], exploreScene.choices[1], "Leave"], [true, true, true]);
+    } else {
+        setExploreButtons([exploreScene.choices[0], exploreScene.choices[1], ""], [true, true, false]);
+
+    }
+    
+    playAudio(encounters[location].audio);
 };
 
 exploreBtn.addEventListener('click', () => {
@@ -1028,13 +1065,53 @@ exploreBtn.addEventListener('click', () => {
 });
 exploreOptionBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
-        if (exploreContext.type === 'fork') {
-            resetTextExplore(exploreContext.options[i])
-        } else if (exploreContext.type === 'fight') {
-            if (determineWin(exploreContext.dmg, exploreContext.element, exploreContext.range) === "Win") {
-                addInventory(getReward());
+        if (!btn.classList.contains('active')) return;
+        if (energy === 0) {
+            exploreText.innerHTML = "You are way too tired to continue on. You head back to town and rest up."
+            setExploreButtons(["Continue", "", ""], [true, false, false]);
+            exploreContext.type = "tired"
+        } else if (exploreContext.type === 'fork') {
+            if (i == 2) {
+                setActiveMainTab('home');
+                return;
             }
-
+            resetTextExplore(exploreContext.options[i]);
+            energy -= 1;
+        } else if (exploreContext.type === 'fight') {
+            if (i == 0) {
+                playAudio('audio/sword.wav');
+                if (determineWin(exploreContext.dmg, exploreContext.element, exploreContext.range) === "Win") {
+                    exploreText.innerHTML = addInventory(getReward());
+                    exploreContext.type = "continue"
+                } else {
+                    inventory.materials = {};
+                    exploreText.innerHTML = "Your enemy was too strong and ended up overwhelming you and eventually you fall unconcious. You wake up losing all your materials.";
+                    exploreContext.type = "lose"
+                }
+                setExploreButtons(["Continue", "", ""], [true, false, false]);
+            } else if (i == 1) {
+                getExploreFork()
+            }
+            
+            
+        } else if (exploreContext.type === "continue") {
+            getExploreFork()
+        } else if (exploreContext.type === "lose") {
+            setActiveMainTab('home')
+        } else if (exploreContext.type === "tired") {
+            setActiveMainTab('home')
+        } else if (exploreContext.type === "find") {
+            exploreText.innerHTML = addInventory(getReward());
+            setExploreButtons(["Continue", "", ""], [true, false, false]);
+            exploreContext.type = "continue";
+        } else if (exploreContext.type === "trade") {
+            if (i == 0) {
+                openShop('explore');
+            } else if (i == 1) {
+                //will implement if have time (special offer from individual traders)
+            } else if (i == 2) {
+                getExploreFork();
+            }
         }
     });
 });
@@ -1042,13 +1119,23 @@ exploreOptionBtns.forEach((btn, i) => {
 function addInventory(item) {
     if (item.includes('Bow') || item.includes('Broadsword') || item.includes('Spear')) {
         inventory.weapons[item] = { cleanliness: "Dirty", passive: "None" };
+        return `You picked up a ${weapons[item].name}`;
     } else {
-        if (!inventory.materials[item]) {
-            inventory.materials[item] = 1;
+        if (Object.keys(inventory.materials).length < 10) {
+            if (!inventory.materials[item]) {
+                inventory.materials[item] = 1;
+            } else {
+                inventory.materials[item] += 1;
+            }
+            return `You picked up a ${materials[item].name}`;
         } else {
-            inventory.materials[item] += 1;
+            return `Your inventory is full so you could not pick up the ${materials[item].name}.`;
         }
     }
+}
+//SHOP
+function openShop(previousTab) {
+
 }
 //STORY
 function resetTextStory() {
