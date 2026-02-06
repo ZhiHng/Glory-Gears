@@ -19,7 +19,7 @@ function setActiveMainTab(tabId) {
     const tab = document.getElementById(tabId);
     const link = document.querySelector(`.tab-link[href="#${tabId}"]`);
 
-    if (!tab || !link) return;
+    if (!tab) return;
 
     // Deactivate all main tabs
     contents.forEach(c => c.classList.remove('active'));
@@ -96,6 +96,9 @@ document.addEventListener("keydown", function(event) {
             break;
         case '8':
             targetId = 'archive';
+            break;
+        case '0':
+            console.log(inventory);
             break;
         default:
             break;
@@ -383,7 +386,7 @@ const weapons = {
         damage: 50,
         passive: "Damage against demonic enemies +50%",
         image: "images/weapons/crystalPiercer.png",
-        price: 0
+        price: "Cannot be bought or sold"
     },
 
     infernalCleaver: {
@@ -394,7 +397,7 @@ const weapons = {
         damage: 40,
         passive: "Damage against non-boss enemies +50%",
         image: "images/weapons/infernalCleaver.png",
-        price: 0
+        price: "Cannot be bought or sold"
     },
 
     tempestArcs: {
@@ -405,7 +408,7 @@ const weapons = {
         damage: 35,
         passive: "Winning Chance +20%",
         image: "images/weapons/tempestArcs.png",
-        price: 0
+        price: "Cannot be bought or sold"
     },
 
     sturdyBroadsword: {
@@ -415,6 +418,7 @@ const weapons = {
         range: "Short",
         damage: 10,
         passive: "None",
+        image: "images/weapons/sword.jpeg",
         price: 20
     },
 
@@ -425,6 +429,7 @@ const weapons = {
         range: "Long",
         damage: 10,
         passive: "None",
+        image: "images/weapons/spear.jpeg",
         price: 25
     },
 
@@ -435,6 +440,7 @@ const weapons = {
         range: "Very Long",
         damage: 8,
         passive: "None",
+        image: "images/weapons/bow.jpeg",
         price: 15
     },
 
@@ -445,6 +451,7 @@ const weapons = {
         range: "Long",
         damage: 16,
         passive: "Damage against small enemies +10%",
+        image: "images/weapons/frostSpear.jpeg",
         price: 80
     },
 
@@ -455,6 +462,7 @@ const weapons = {
         range: "Short",
         damage: 17,
         passive: "Elemental damage x1.5",
+        image: "images/weapons/frostSword.jpeg",
         price: 85
     },
 
@@ -465,6 +473,7 @@ const weapons = {
         range: "Long",
         damage: 17,
         passive: "Damage against large enemies + 10%",
+        image: "images/weapons/flameSpear.jpeg",
         price: 85
     },
 
@@ -475,6 +484,7 @@ const weapons = {
         range: "Short",
         damage: 18,
         passive: "cleanliness damage bonus +10%",
+        image: "images/weapons/flameSword.jpeg",
         price: 80
     },
 };
@@ -553,25 +563,37 @@ const materials = {
 
 //REWARD DROPS
 const rewardPool = [
-    weapons.sturdyBroadsword, 
-    weapons.sturdySpear, 
-    weapons.sturdyBow, 
-    weapons.frostSpear, 
-    weapons.flameSpear, 
-    materials.sponge, 
-    materials.soap, 
-    materials.crystal, 
-    materials.flameGem, 
-    materials.frostGem, 
-    materials.shockGem, 
-    materials.energyGem, 
-    materials.ring, 
-    materials.bracelet, 
-    materials.magicOrb
+    { type: "weapon", key: "sturdyBroadsword", item: weapons.sturdyBroadsword },
+    { type: "weapon", key: "sturdySpear", item: weapons.sturdySpear },
+    { type: "weapon", key: "sturdyBow", item: weapons.sturdyBow },
+    { type: "weapon", key: "frostSpear", item: weapons.frostSpear },
+    { type: "weapon", key: "flameSpear", item: weapons.flameSpear },
+
+    { type: "material", key: "sponge", item: materials.sponge },
+    { type: "material", key: "soap", item: materials.soap },
+    { type: "material", key: "crystal", item: materials.crystal },
+    { type: "material", key: "flameGem", item: materials.flameGem },
+    { type: "material", key: "frostGem", item: materials.frostGem },
+    { type: "material", key: "shockGem", item: materials.shockGem },
+    { type: "material", key: "energyGem", item: materials.energyGem },
+    { type: "material", key: "ring", item: materials.ring },
+    { type: "material", key: "bracelet", item: materials.bracelet },
+    { type: "material", key: "magicOrb", item: materials.magicOrb }
 ];
 
+const shopPool = [
+    weapons.sturdyBroadsword,
+    weapons.sturdySpear,
+    weapons.sturdyBow,
+    weapons.frostSword,
+    weapons.flameSword,
+    materials.sponge,
+    materials.soap,
+    materials.crystal,
+]
+
 function getReward() {
-    const weights = rewardPool.map(item => 1 / item.price);
+    const weights = rewardPool.map(r => 1 / r.item.price);
     const totalWeight = weights.reduce((sum, w) => sum + w, 0);
     let roll = Math.random() * totalWeight;
 
@@ -640,10 +662,21 @@ const passives = {
 
 //DAMAGE CALCULATION
 function getDamage(enemyElement, enemyRange) {
-    let baseDmg = weapons[player.equipped].damage;
-    let range = weapons[player.equipped].range;
-    let element = weapons[player.equipped].element;
-    let cleanliness = inventory.weapons[player.equipped].cleanliness;
+    let baseDmg = 0;
+    let range = "";
+    let element = "";
+    let cleanliness = "";
+    if (player.equipped == 'none') {
+        baseDmg = 3;
+        range = "Short"
+        element = "None"
+        cleanliness = "Dirty"
+    } else {
+        baseDmg = weapons[player.equipped].damage;
+        range = weapons[player.equipped].range;
+        element = weapons[player.equipped].element;
+        cleanliness = inventory.weapons[player.equipped].cleanliness;
+    }
     if (cleanliness == "Mild Dirty") {
         baseDmg += 15
     } else if (cleanliness == "Clean") {
@@ -932,7 +965,8 @@ function getRandomKeyFromObj(object) {
 
 //PLAYER
 const player = {
-    equipped: "None"
+    equipped: "sturdyBroadsword",
+    gold: 0
 };
 const inventory = {
     weapons: {
@@ -977,13 +1011,27 @@ function getRandomEncounterKey(location) {
     );
     return keys[Math.floor(Math.random() * keys.length)];
 }
-
+//HOME BUTTONS
+exploreBtn.addEventListener('click', () => {
+    setActiveMainTab('explore');
+    energy = 5;
+    getExploreFork()
+});
+shopBtn.addEventListener('click', () => {
+    openShop('home');
+});
+invBtn.addEventListener('click', () => {
+    resetItemPreview(weaponValues[0])
+});
 
 //INVENTORY
-const inventoryWeapons = document.querySelectorAll('.invWeapon');
-const weaponsKeys = Object.keys(weapons);
-inventoryWeapons.forEach((div, i) => {
-    div.querySelector('.weaponImg').style.background = `url(${weapons[weaponsKeys[i]]}) center / cover no-repeat`
+const inventoryWeaponsImg = document.querySelectorAll('.weapon-img');
+const weaponValues = Object.values(weapons)
+inventoryWeaponsImg.forEach((div, i) => {
+    div.style.background = `url(${weaponValues[i].image}) center / contain no-repeat`;
+    div.addEventListener('click', () => {
+        resetItemPreview(weaponValues[i]);
+    });
 });
 
 //EXPLORE
@@ -992,25 +1040,33 @@ let exploreContext = {
 }
 
 function getExploreFork() {
-    currentAudio?.pause();
-    playAudio("audio/walk.wav");
-    exploreOptionBtns.forEach(i => {i.classList.add('active')});
-    let loc1 = getRandomKeyFromObj(encounters);
-    let loc2 = getRandomKeyFromObj(encounters);
-    while (loc1 === loc2) {
-        loc2 = getRandomKeyFromObj(encounters);
+    if (energy === 0) {
+        exploreText.innerHTML = "You are way too tired to continue on. You head back to town and rest up."
+        setExploreButtons(["Continue", "", ""], [true, false, false]);
+        exploreContext = {type: "tired"}
+    } else {
+        currentAudio?.pause();
+        playAudio("audio/walk.wav");
+        exploreOptionBtns.forEach(i => {i.classList.add('active')});
+        let loc1 = getRandomKeyFromObj(encounters);
+        let loc2 = getRandomKeyFromObj(encounters);
+        while (loc1 === loc2) {
+            loc2 = getRandomKeyFromObj(encounters);
+        }
+
+        exploreContext = {
+            type: "fork",
+            options: [loc1, loc2]
+        };
+
+        let finalText = `You travel for a while and come across a fork in the pathway. You can travel to two locations. <br>${encounters[loc1].text}<br>${encounters[loc2].text}`;
+        exploreText.innerHTML = finalText;
+        exploreBackground[0].style.width = `50vw`;
+        exploreBackground[1].style.width = `50vw`;
+        exploreBackground[0].style.background = `url(${encounters[loc1].image}) center / cover no-repeat`;
+        exploreBackground[1].style.background = `url(${encounters[loc2].image}) center / cover no-repeat`;
+        setExploreButtons([encounters[loc1].textOption, encounters[loc2].textOption, "Go back to town"], [true, true, true]);
     }
-
-    exploreContext = {
-        type: "fork",
-        options: [loc1, loc2]
-    };
-
-    let finalText = `You travel for a while and come across a fork in the pathway. You can travel to two locations. <br>${encounters[loc1].text}<br>${encounters[loc2].text}`;
-    exploreText.innerHTML = finalText;
-    exploreBackground[0].style.background = `url(${encounters[loc1].image}) center / cover no-repeat`;
-    exploreBackground[1].style.background = `url(${encounters[loc2].image}) center / cover no-repeat`;
-    setExploreButtons([encounters[loc1].textOption, encounters[loc2].textOption, "Go back to town"], [true, true, true]);
 };
 
 
@@ -1045,9 +1101,9 @@ function resetTextExplore(location) {
         finalText += string + "<br>";
     });
     if (encounterType == 'fight') {
-        finalText += `Chance of victory: ${Math.min(getDamage(enemyElement, enemyRange)/enemyDmg, 0.95).toFixed(2)}`;
+        finalText += `Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/enemyDmg, 0.95)*100).toFixed(2)}%`;3
     }
-    exploreText.innerHTML = finalText
+    exploreText.innerHTML = finalText;
     if (encounterType == "trade") {
         setExploreButtons([exploreScene.choices[0], exploreScene.choices[1], "Leave"], [true, true, true]);
     } else {
@@ -1058,43 +1114,37 @@ function resetTextExplore(location) {
     playAudio(encounters[location].audio);
 };
 
-exploreBtn.addEventListener('click', () => {
-    setActiveMainTab('explore');
-    energy = 5;
-    getExploreFork()
-});
 exploreOptionBtns.forEach((btn, i) => {
+    console.log(energy);
     btn.addEventListener('click', () => {
         if (!btn.classList.contains('active')) return;
-        if (energy === 0) {
-            exploreText.innerHTML = "You are way too tired to continue on. You head back to town and rest up."
-            setExploreButtons(["Continue", "", ""], [true, false, false]);
-            exploreContext.type = "tired"
-        } else if (exploreContext.type === 'fork') {
+        if (exploreContext.type === 'fork') {
             if (i == 2) {
                 setActiveMainTab('home');
                 return;
             }
             resetTextExplore(exploreContext.options[i]);
-            energy -= 1;
+            exploreBackground[0].style.background = `url(${encounters[exploreContext.loc].image}) center / cover no-repeat`;
+            exploreBackground[0].style.width = `100vw`;
+            exploreBackground[1].style.width = `0vw`;
         } else if (exploreContext.type === 'fight') {
             if (i == 0) {
                 playAudio('audio/sword.wav');
                 if (determineWin(exploreContext.dmg, exploreContext.element, exploreContext.range) === "Win") {
                     exploreText.innerHTML = addInventory(getReward());
-                    exploreContext.type = "continue"
+                    exploreContext = {type: "continue"}
                 } else {
                     inventory.materials = {};
                     exploreText.innerHTML = "Your enemy was too strong and ended up overwhelming you and eventually you fall unconcious. You wake up losing all your materials.";
-                    exploreContext.type = "lose"
+                    exploreContext = {type: "lose"}
                 }
                 setExploreButtons(["Continue", "", ""], [true, false, false]);
             } else if (i == 1) {
+                energy -= 1;
                 getExploreFork()
             }
-            
-            
         } else if (exploreContext.type === "continue") {
+            energy -= 1;
             getExploreFork()
         } else if (exploreContext.type === "lose") {
             setActiveMainTab('home')
@@ -1103,39 +1153,77 @@ exploreOptionBtns.forEach((btn, i) => {
         } else if (exploreContext.type === "find") {
             exploreText.innerHTML = addInventory(getReward());
             setExploreButtons(["Continue", "", ""], [true, false, false]);
-            exploreContext.type = "continue";
+            exploreContext = {type: "continue"};
         } else if (exploreContext.type === "trade") {
             if (i == 0) {
                 openShop('explore');
             } else if (i == 1) {
                 //will implement if have time (special offer from individual traders)
             } else if (i == 2) {
+                energy -= 1;
                 getExploreFork();
             }
         }
     });
 });
 
-function addInventory(item) {
-    if (item.includes('Bow') || item.includes('Broadsword') || item.includes('Spear')) {
-        inventory.weapons[item] = { cleanliness: "Dirty", passive: "None" };
-        return `You picked up a ${weapons[item].name}`;
+function addInventory(reward) {
+    if (reward.type === "weapon") {
+        inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None" };
+        return `You picked up a ${reward.item.name}`;
     } else {
         if (Object.keys(inventory.materials).length < 10) {
-            if (!inventory.materials[item]) {
-                inventory.materials[item] = 1;
+            if (!inventory.materials[reward.key]) {
+                inventory.materials[reward.key] = 1;
             } else {
-                inventory.materials[item] += 1;
+                inventory.materials[reward.key] += 1;
             }
-            return `You picked up a ${materials[item].name}`;
+            return `You picked up a ${reward.item.name}`;
         } else {
-            return `Your inventory is full so you could not pick up the ${materials[item].name}.`;
+            return `Your inventory is full so you could not pick up the ${reward.item.name}.`;
         }
     }
 }
-//SHOP
-function openShop(previousTab) {
 
+//SHOP
+const buyItems = document.querySelectorAll('#shopbuy .buy-item');
+const previewText = document.querySelectorAll('.item-details');
+const previewImg = document.querySelectorAll(".item-img");
+function resetItemPreview(itemObject) {
+    previewText.forEach(div => {
+        let finalText = '';
+        if (!itemObject.element) {
+            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Price: ${itemObject.price}`
+        } else {
+            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Element: ${itemObject.element}<br>Range: ${itemObject.range}<br>Damage: ${itemObject.damage}<br>Passive: ${itemObject.passive}<br>Price: ${itemObject.price}`
+        }
+        div.innerHTML = finalText;
+        
+    });
+    previewImg.forEach(div => {
+        if (itemObject.name == "Crystal Piercer") {
+            div.innerHTML = '<iframe title="Azurelight Model" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/7475b57704c44e66a31ab516b9f558a8/embed"> </iframe>'
+        } else if (itemObject.name == "Infernal Cleaver") {
+            div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
+        } else if (itemObject.name == "Tempest Arcs") {
+            div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
+        } else {
+            div.innerHTML = '';
+            div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
+        }
+    });
+}
+
+buyItems.forEach((div, i) => {
+    div.style.background = `url(${shopPool[i].image}) center / contain no-repeat`;
+    div.addEventListener('click', () => {
+        resetItemPreview(shopPool[i]);
+    });
+});
+
+function openShop(previousTab) {
+    setActiveMainTab('shop');
+    resetItemPreview(shopPool[0])
 }
 //STORY
 function resetTextStory() {
