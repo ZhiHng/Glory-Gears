@@ -121,6 +121,18 @@
     flex-direction: column;
 }
 
+.sell-item {
+    width: 200px;
+    height: 200px;
+    border-color: aqua;
+    border-radius: 2px;
+    background: black;
+    margin: 5%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
 .weapon-img {
     width: 200px;
     height: 200px;

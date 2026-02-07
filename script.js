@@ -16,6 +16,7 @@ document.querySelectorAll('.tab-content').forEach(tab => {
 
 // --- FUNCTION TO SWITCH MAIN TAB MANUALLY ---
 function setActiveMainTab(tabId) {
+    currentAudio?.pause();
     const tab = document.getElementById(tabId);
     const link = document.querySelector(`.tab-link[href="#${tabId}"]`);
 
@@ -99,6 +100,7 @@ document.addEventListener("keydown", function(event) {
             break;
         case '0':
             console.log(inventory);
+            console.log(player);
             break;
         default:
             break;
@@ -582,15 +584,16 @@ const rewardPool = [
 ];
 
 const shopPool = [
-    weapons.sturdyBroadsword,
-    weapons.sturdySpear,
-    weapons.sturdyBow,
-    weapons.frostSword,
-    weapons.flameSword,
-    materials.sponge,
-    materials.soap,
-    materials.crystal,
-]
+    { key: "sturdyBroadsword", category: "weapons", object: weapons.sturdyBroadsword },
+    { key: "sturdySpear", category: "weapons", object: weapons.sturdySpear },
+    { key: "sturdyBow", category: "weapons", object: weapons.sturdyBow },
+    { key: "frostSword", category: "weapons", object: weapons.frostSword },
+    { key: "flameSword", category: "weapons", object: weapons.flameSword },
+    { key: "sponge", category: "materials", object: materials.sponge },
+    { key: "soap", category: "materials", object: materials.soap },
+    { key: "crystal", category: "materials", object: materials.crystal },
+];
+
 
 function getReward() {
     const weights = rewardPool.map(r => 1 / r.item.price);
@@ -970,6 +973,7 @@ const player = {
 };
 const inventory = {
     weapons: {
+        crystalPiercer: {cleanliness: "Dirty", passive: "None"},
         sturdyBroadsword: {cleanliness: "Dirty", passive: "None"}
     },
     materials: {
@@ -1106,16 +1110,16 @@ function resetTextExplore(location) {
     exploreText.innerHTML = finalText;
     if (encounterType == "trade") {
         setExploreButtons([exploreScene.choices[0], exploreScene.choices[1], "Leave"], [true, true, true]);
+    } else if (encounterType == "find") {
+        setExploreButtons([exploreScene.choices[0], exploreScene.choices[1], "Leave"], [true, false, false]);
     } else {
         setExploreButtons([exploreScene.choices[0], exploreScene.choices[1], ""], [true, true, false]);
-
     }
     
     playAudio(encounters[location].audio);
 };
 
 exploreOptionBtns.forEach((btn, i) => {
-    console.log(energy);
     btn.addEventListener('click', () => {
         if (!btn.classList.contains('active')) return;
         if (exploreContext.type === 'fork') {
@@ -1189,6 +1193,8 @@ function addInventory(reward) {
 const buyItems = document.querySelectorAll('#shopbuy .buy-item');
 const previewText = document.querySelectorAll('.item-details');
 const previewImg = document.querySelectorAll(".item-img");
+const sellContainer = document.querySelector('#shopsell .scrollable-section');
+
 function resetItemPreview(itemObject) {
     previewText.forEach(div => {
         let finalText = '';
@@ -1215,16 +1221,219 @@ function resetItemPreview(itemObject) {
 }
 
 buyItems.forEach((div, i) => {
-    div.style.background = `url(${shopPool[i].image}) center / contain no-repeat`;
+    const entry = shopPool[i];
+
+    div.style.background = `url(${entry.object.image}) center / contain no-repeat`;
+
     div.addEventListener('click', () => {
-        resetItemPreview(shopPool[i]);
+        currentPreviewEntry = entry;
+        resetItemPreview(entry.object);
+        updateShopButtons();
     });
 });
 
-function openShop(previousTab) {
-    setActiveMainTab('shop');
-    resetItemPreview(shopPool[0])
+
+var sellEntries = [];
+var currentPreviewEntry = {};
+var shopMode = "buy";
+
+function resetSellItems() {
+    sellContainer.innerHTML = '';
+    sellEntries = [];
+
+    ['weapons', 'materials'].forEach(category => {
+        Object.keys(inventory[category]).forEach(key => {
+            const object = category === "weapons" ? weapons[key] : materials[key];
+
+            if (object.price === "Cannot be bought or sold") return;
+
+            const entry = { key, category, object };
+            sellEntries.push(entry);
+
+            const div = document.createElement("div");
+            div.className = "sell-item";
+            div.style.background = `url(${object.image}) center / contain no-repeat`;
+
+            div.addEventListener('click', () => {
+                currentPreviewEntry = entry;
+                resetItemPreview(object);
+                updateShopButtons();
+            });
+
+            sellContainer.appendChild(div);
+        });
+    });
 }
+
+const shopBuyTab = document.querySelector('#shopsell .sub-tab-link[href="#shopbuy"]');
+const shopSellTab = document.querySelector('#shopbuy .sub-tab-link[href="#shopsell"]');
+const shopActionBtns = document.querySelectorAll('.shop-buy-sell');
+
+function updateShopButtons() {
+    if (shopMode === "buy") {
+        shopActionBtns[0].textContent = "Buy 1";
+        shopActionBtns[1].style.display = "none";
+    } 
+    else if (shopMode === "sell") {
+        shopActionBtns[0].textContent = "Sell 1";
+        shopActionBtns[1].textContent = "Sell All";
+        shopActionBtns[1].style.display = "inline-block";
+    }
+
+    const disabled = !currentPreviewEntry;
+    shopActionBtns.forEach(btn => {
+        btn.disabled = disabled;
+        btn.style.opacity = disabled ? 0.4 : 1;
+    });
+}
+
+
+shopActionBtns.forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+        if (!currentPreviewEntry) return;
+
+        if (shopMode === "buy") {
+            const { key, category, object } = currentPreviewEntry;
+            buyItem(key, category, object);
+        }
+
+
+        if (shopMode === "sell") {
+            const { key, category, object } = currentPreviewEntry;
+
+            if (i === 0) {
+                sellItem(key, category, object, "one");
+            } else {
+                sellItem(key, category, object, "all");
+            }
+
+            resetSellItems();
+
+            if (sellEntries.length > 0) {
+                currentPreviewEntry = sellEntries[0];
+                resetItemPreview(currentPreviewEntry.object);
+            } else {
+                currentPreviewEntry = null;
+            }
+        }
+    });
+});
+
+function buyItem(key, category, object) {
+    if (player.gold < object.price) {
+        alert("Not enough gold!");
+        return;
+    }
+
+    player.gold -= object.price;
+
+    if (category === "materials") {
+        if (!inventory.materials[key]) {
+            inventory.materials[key] = 1;
+        } else {
+            inventory.materials[key] += 1;
+        }
+    } else {
+        inventory.weapons[key] = {cleanliness: "Dirty", passive: "None"};
+    }
+
+    resetSellItems(); // shop sell page updates after buying
+}
+
+function sellItem(key, cat, obj, oneOrAll) {
+    if (cat === "weapons" && player.equipped === key) {
+        player.equipped = "none";
+    }
+
+    if (oneOrAll === "one") {
+        if (cat === "materials") {
+            inventory.materials[key]--;
+            player.gold += obj.price;
+
+            if (inventory.materials[key] <= 0) {
+                delete inventory.materials[key];
+            }
+        } else {
+            player.gold += obj.price;
+            delete inventory.weapons[key];
+        }
+    }
+
+    if (oneOrAll === "all") {
+        if (cat === "materials") {
+            const quantity = inventory.materials[key];
+            player.gold += obj.price * quantity;
+            delete inventory.materials[key];
+        } else {
+            player.gold += obj.price;
+            delete inventory.weapons[key];
+        }
+    }
+
+    resetSellItems();
+
+    if (sellEntries.length > 0) {
+        currentPreviewEntry = sellEntries[0];
+        resetItemPreview(currentPreviewEntry.object);
+    } else {
+        currentPreviewEntry = null;
+    }
+
+    updateShopButtons();
+}
+
+
+shopBuyTab.addEventListener('click', (e) => {
+    e.preventDefault();
+    shopMode = "buy";
+
+    currentPreviewEntry = shopPool[0];
+    resetItemPreview(shopPool[0].object);
+
+    updateShopButtons();
+});
+
+shopSellTab.addEventListener('click', (e) => {
+    e.preventDefault();
+    shopMode = "sell";
+    resetSellItems();
+
+    if (sellEntries.length > 0) {
+        currentPreviewEntry = sellEntries[0];
+        resetItemPreview(currentPreviewEntry.object);
+    } else {
+        currentPreviewEntry = null;
+
+        previewText.forEach(div => div.innerHTML = "No items to sell.");
+        previewImg.forEach(div => {
+            div.innerHTML = '';
+            div.style.background = '';
+        });
+    }
+
+    updateShopButtons();
+});
+
+const backBtn = document.querySelectorAll('.back-btn');
+var previousTab = '';
+
+function openShop(lastTab) {
+    previousTab = lastTab;
+    setActiveMainTab('shop');
+
+    shopMode = "buy";
+    currentPreviewEntry = shopPool[0];
+
+    resetItemPreview(shopPool[0].object);
+    updateShopButtons();
+    resetSellItems();
+}
+
+backBtn.forEach(but => {
+    but.addEventListener('click', () => {
+        setActiveMainTab(previousTab);
+    });
+});
 //STORY
 function resetTextStory() {
 
