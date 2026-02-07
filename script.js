@@ -1026,6 +1026,10 @@ shopBtn.addEventListener('click', () => {
 });
 invBtn.addEventListener('click', () => {
     resetItemPreview(weaponValues[0])
+    previousTab = 'home'
+});
+archiveBtn.addEventListener('click', () => {
+    previousTab = 'home'
 });
 
 //INVENTORY
@@ -1434,6 +1438,37 @@ backBtn.forEach(but => {
         setActiveMainTab(previousTab);
     });
 });
+
+//ARCHIVE
+const archiveContent = document.querySelector('#archive-content');
+const archiveBtns = document.querySelectorAll('.archivebutton button');
+
+const archiveText = [
+    "After being released from jail, you resolve to start a new life and find a way to earn money. Whether by asking around for work or heading straight to the adventurer's guild, you eventually take on a low-rank herb-collecting quest. <br>During the journey, you witness bandits discarding a rusted, cloth-wrapped sword they deem worthless. Drawn to it, you take the sword and feel a strange power emanating from its handle. You attempt to sell the sword, but traders dismiss it as dirty. Using your past experience as a cleaner, you successfully remove the grime and return, only to be warned by a mysterious cloaked passerby not to trade it away. <br>Keeping the sword, you accept a slime-hunting quest, during which you are ambushed by a demon. In a moment of desperation, the sword reacts to the demon's power, unleashing crystal shards that kill the demon and fuse into the weapon, transforming it. <br>Shaken, you return to town where traders suddenly show intense interest in your sword, offering large sums of gold. Just as you are about to sell it, the cloaked passerby intervenes again and reveals that the sword is a legendary weapon. He warns you that dangerous forces are still seeking these weapons and that selling it could put you in grave danger. Advising you to keep the sword and continue the path left unfinished by others, he urges you to stay cautious and prepare for what lies ahead.",
+    "The passerby funds your journey and sends you to the desert to retrieve the Fire Scythe. After reaching a forgotten temple filled with monsters, you either fight through them or sneak past, but both paths lead to an encounter with the clone. <br>Depending on your choices and luck, the clone briefly overpowers or confronts you, revealing its growing strength and obsession with the weapon. <br>In the temple's central chamber, a spear embedded in a pedestal becomes the focus. As the clone attempts to claim it, the spear transforms into a scythe, killing the clone instantly. <br>Seizing the moment, you escape with the newly awakened Fire Scythe and your crystal sword. As you flee, you realize the danger is far from over when two more clones appear, watching from a distance.",
+    "You enter the temple and are carried into the sky, where the legendary bow awaits. Whether you take a safer route or a faster, trap-filled path, you encounter multiple clones attempting to claim the weapon. <br>Taking advantage of the chaos, you manage to reach the bow, but activating it draws even more clones into the fight. Using a combination of the crystal sword and Fire Scythe, you unleash a powerful attack, but the clones reveal a new weapon—a sceptre capable of absorbing and redirecting energy. <br>Overpowered, you are knocked down as the clones escape with the bow. Returning to town, you inform the passerby, who realizes the enemy has obtained another legendary weapon. With only one remaining—the Water Staff hidden deep beneath the sea—he decides to accompany you, and together you prepare for the next journey.",
+    "You have not played this chapter",
+    "You have not played this chapter",
+    "You have not played this chapter",
+    `It is said that the heroes of the past who wielded the five legendary weapons united to fight the calamity and its ruler, Peruare. Due to unforeseen circumstances, during the final moments of Peruare, he decomposed his physical form to amplify his spiritual body and fused together with the legendary weapons. 
+    <br>The heroes celebrated the fall of the calamity and set out on their own paths. Over the days, there were rumors of sightings of Peruare roaming the wilderness. Reports came in of adventurers noticing Peruare feeding on animals and monsters, growing stronger and releasing more chaotic aura each time. By the time the heroes caught wind of the incident, it was already too late. The clones had grown incredibly strong. <br>During clashes with each hero, they noticed that the clones only went after their weapons. Each time the clones were killed, they came back after a few days. In one clash between a hero and a clone, the hero was pulled down along with the clone into a bottomless chasm. However, once they fell to the bottom, their weapons started losing their vitality, and so did the clone. 
+    <br>The hero concluded that the clones were manifesting from the weapons and that Peruare's soul was merged into them. The only way to stop the clones was to drain the weapons' power by covering them from sunlight.
+    <br>Having suspicion, the hero set out to warn the other heroes, only to find there were more clones after the other heroes' swords. The heroes suspected the clones were trying to bring the legendary weapons together to fuse Peruare's soul back together and revive him.
+    <br>They came up with a plan to bring the weapons together and shatter them all at once to finally defeat Peruare. But terror struck when they heard one hero had fallen with one legendary weapon now in the calamity's possession. They also noticed the clones becoming stronger day by day.
+    <br>Facing this, they decided not to risk losing their weapons to the calamity, with no guarantee they could break all the weapons at the same time to end it. Instead, they buried their weapons in different regions around the world, preventing the calamity from locating them.
+    <br>With their weapons' power drained, the clones' numbers were also reduced to one. In a final hope, they launched an all-out attack on the final clone to steal the weapon and prevent the calamity from recurring again. The heroes fell one after another, with the final hero throwing the last weapon into a deep cave, perishing after being impaled at the last second.
+    <br>Little did they know, some light was still reachable inside the cave. Though not enough energy to climb out, the final clone lay dormant there for eternity. All the heroes could hope for was that no one would ever find the legendary weapons and expose them to sunlight, powering the weapons and bringing the clones back.
+    <br>In the event that it does happen, may Peruare's power have withered enough over the years for a brave new soul to finish what they set out to do that fateful day.
+    `
+]
+
+archiveContent.innerHTML = archiveText[0];
+archiveBtns.forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+        archiveContent.innerHTML = archiveText[i];
+    });
+});
+
 //STORY
 function resetTextStory() {
 
