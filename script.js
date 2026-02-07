@@ -1025,7 +1025,7 @@ shopBtn.addEventListener('click', () => {
     openShop('home');
 });
 invBtn.addEventListener('click', () => {
-    resetItemPreview(weaponValues[0])
+    openInventory();
     previousTab = 'home'
 });
 archiveBtn.addEventListener('click', () => {
@@ -1033,19 +1033,193 @@ archiveBtn.addEventListener('click', () => {
 });
 
 //INVENTORY
-const inventoryWeaponsImg = document.querySelectorAll('.weapon-img');
-const weaponValues = Object.values(weapons)
-inventoryWeaponsImg.forEach((div, i) => {
-    div.style.background = `url(${weaponValues[i].image}) center / contain no-repeat`;
-    div.addEventListener('click', () => {
-        resetItemPreview(weaponValues[i]);
+const invWeaponTab = document.querySelector('#inventoryweapon .sub-tab-link');
+const invMaterialTab = document.querySelector('#inventorymaterial .sub-tab-link');
+
+invWeaponTab.addEventListener('click', () => {
+    resetInventoryWeapons();
+});
+
+invMaterialTab.addEventListener('click', () => {
+    resetInventoryMaterials();
+});
+
+function openInventory() {
+    setActiveMainTab('inventory');
+    resetInventoryWeapons();
+}
+
+const weaponContainer = document.querySelector('#inventoryweapon .scrollable-section');
+var inventoryWeaponEntries = [];
+var currentInventoryEntry = {};
+
+function resetInventoryWeapons() {
+    weaponContainer.innerHTML = '';
+    inventoryWeaponEntries = [];
+
+    const ownedKeys = Object.keys(inventory.weapons);
+    const allKeys = Object.keys(weapons);
+
+    // Owned first
+    const orderedKeys = [
+        ...ownedKeys,
+        ...allKeys.filter(k => !ownedKeys.includes(k)) //Everything else then ... to spread it into one array.
+    ];
+
+    orderedKeys.forEach(key => {
+        const weapon = weapons[key];
+        const owned = !!inventory.weapons[key];
+
+        const div = document.createElement('div');
+        div.className = 'weapon-img';
+
+        if (owned) {
+            div.style.background = `url(${weapon.image}) center / contain no-repeat`;
+        } else {
+            div.style.background = 'grey';
+            div.classList.add('locked'); // optional CSS styling
+        }
+
+        const entry = { key, category: "weapons", object: weapon, owned };
+        inventoryWeaponEntries.push(entry);
+
+        div.addEventListener('click', () => {
+            currentInventoryEntry = entry;
+            resetItemPreview(weapon);
+            updateInventoryButtons();
+        });
+
+        weaponContainer.appendChild(div);
+    });
+
+    if (inventoryWeaponEntries.length > 0) {
+        currentInventoryEntry = inventoryWeaponEntries[0];
+        resetItemPreview(currentInventoryEntry.object);
+        updateInventoryButtons();
+    }
+}
+
+const materialContainer = document.querySelector('#inventorymaterial .scrollable-section');
+let inventoryMaterialEntries = [];
+
+function resetInventoryMaterials() {
+    materialContainer.innerHTML = '';
+    inventoryMaterialEntries = [];
+
+    const ownedKeys = Object.keys(inventory.materials);
+    const allKeys = Object.keys(materials);
+
+    const orderedKeys = [
+        ...ownedKeys,
+        ...allKeys.filter(k => !ownedKeys.includes(k))
+    ];
+
+    orderedKeys.forEach(key => {
+        const mat = materials[key];
+        const owned = !!inventory.materials[key];
+
+        const div = document.createElement('div');
+        div.className = 'material-img';
+
+        if (owned) {
+            div.style.background = `url(${mat.image}) center / contain no-repeat`;
+        } else {
+            div.style.background = 'grey';
+            div.classList.add('locked');
+        }
+
+        const entry = { key, category: "materials", object: mat, owned };
+        inventoryMaterialEntries.push(entry);
+
+        div.addEventListener('click', () => {
+            currentInventoryEntry = entry;
+            resetItemPreview(mat);
+            updateInventoryButtons();
+        });
+
+        materialContainer.appendChild(div);
+    });
+
+    if (inventoryMaterialEntries.length > 0) {
+        currentInventoryEntry = inventoryMaterialEntries[0];
+        resetItemPreview(currentInventoryEntry.object);
+        updateInventoryButtons();
+    }
+}
+
+const invWeaponBtns = document.querySelectorAll('.inv-weapon-btn');
+const [equipBtn, enchantBtn, cleanBtn] = invWeaponBtns;
+
+function updateInventoryButtons() {
+    const isWeaponTab = document.querySelector('#inventoryweapon').classList.contains('active');
+
+    invWeaponBtns.forEach(btn => {
+        btn.style.display = isWeaponTab ? 'inline-block' : 'none';
+    });
+
+    if (!currentInventoryEntry || currentInventoryEntry.category !== "weapons") {
+        invWeaponBtns.forEach(btn => btn.disabled = true);
+        return;
+    }
+
+    const owned = currentInventoryEntry.owned;
+
+    equipBtn.disabled = !owned;
+    enchantBtn.disabled = !owned;
+    cleanBtn.disabled = !owned;
+}
+
+equipBtn.addEventListener('click', () => {
+    if (!currentInventoryEntry?.owned) return;
+
+    player.equipped = currentInventoryEntry.key;
+    alert(`You equipped ${currentInventoryEntry.object.name}.`);
+});
+
+enchantBtn.addEventListener('click', () => {
+    if (!currentInventoryEntry?.owned) return;
+
+    const enchantOptions = `
+        <b>Choose Enchant:</b><br>
+        <button class="enchant-opt" data-gem="crystal">Crystal</button>
+        <button class="enchant-opt" data-gem="flameGem">Flame Gem</button>
+        <button class="enchant-opt" data-gem="frostGem">Frost Gem</button>
+        <button class="enchant-opt" data-gem="shockGem">Shock Gem</button>
+        <button class="enchant-opt" data-gem="energyGem">Energy Gem</button>
+    `;
+
+    previewText.forEach(div => div.innerHTML = enchantOptions);
+
+    document.querySelectorAll('.enchant-opt').forEach(btn => {
+        const gemKey = btn.dataset.gem;
+
+        if (!inventory.materials[gemKey]) {
+            btn.disabled = true;
+            btn.style.opacity = 0.4;
+        }
+
+        btn.addEventListener('click', () => {
+            alert(`Enchanting with ${gemKey} (logic later)`);
+        });
     });
 });
 
-//EXPLORE
-let exploreContext = {
+cleanBtn.addEventListener('click', () => {
+    if (!currentInventoryEntry?.owned) return;
 
-}
+    const weaponState = inventory.weapons[currentInventoryEntry.key];
+
+    if (weaponState.cleanliness === "Dirty") {
+        weaponState.cleanliness = "Mild Dirty";
+    } else if (weaponState.cleanliness === "Mild Dirty") {
+        weaponState.cleanliness = "Clean";
+    }
+
+    resetItemPreview(currentInventoryEntry.object);
+});
+
+//EXPLORE
+let exploreContext = {};
 
 function getExploreFork() {
     if (energy === 0) {
