@@ -57,13 +57,13 @@
     right: 0;
 }
 
-.bgforest{
+#story-bg{
     background-position: center;
     top: 0;
-    right: 0;
-    width: 50vw;
+    left: 0;
+    width: 100vw;
     height: 100vh;
-    background: url("images/backgrounds/forest.png") center / cover no-repeat;
+    background: black;
     z-index: -1;
 }
 

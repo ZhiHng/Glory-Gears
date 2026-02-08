@@ -1031,6 +1031,9 @@ invBtn.addEventListener('click', () => {
 archiveBtn.addEventListener('click', () => {
     previousTab = 'home'
 });
+storyBtn.addEventListener('click', () => {
+    startStory();
+});
 
 //INVENTORY
 const invWeaponTab = document.querySelector('#inventorymaterial .sub-tab-link:nth-child(1)');
@@ -1045,7 +1048,6 @@ invWeaponTab.addEventListener('click', () => {
 });
 
 invMaterialTab.addEventListener('click', () => {
-    console.log('yes');
     inventoryMode = "materials";
     resetInventoryMaterials();
     selectFirstInventoryItem();
@@ -1071,7 +1073,6 @@ function selectFirstInventoryItem() {
         resetItemPreview(currentInventoryEntry.object, currentInventoryEntry.owned);
     }
     updateInventoryButtons();
-    console.log(inventoryMode);
 }
 
 const weaponContainer = document.querySelector('#inventoryweapon .scrollable-section');
@@ -1692,6 +1693,100 @@ archiveBtns.forEach((btn, i) => {
 });
 
 //STORY
-function resetTextStory() {
+const storyBg = document.querySelector('#story-bg');
+const btn1 = document.querySelector('#story-btn-1');
+const btn2 = document.querySelector('#story-btn-2');
+var pendingChapterRewards = [];
+var currentChapter = 1;
 
-};
+function startStory() {
+    chapterInProgress = true;
+    currentStoryNode = `chapter${currentChapter}_1`;
+    showStoryNode(currentStoryNode);
+}
+
+function showStoryNode(sceneKey) {
+    const key = story[sceneKey];
+
+    // Background
+    storyBg.style.background = `url(${key.image}) center / cover no-repeat`;
+
+    // Text
+    storyText.innerHTML = key.text.map(line => `<br>${line}<br>`).join("") + "<br>";
+
+
+    // Buttons
+    const choices = key.choices || [];
+
+    if (choices.length === 1) {
+        btn1.style.display = "inline-block";
+        btn2.style.display = "none";
+        btn1.textContent = choices[0].text;
+        btn1.onclick = () => handleStoryChoice(choices[0].next);
+    } 
+    else if (choices.length === 2) {
+        btn1.style.display = "inline-block";
+        btn2.style.display = "inline-block";
+        btn1.textContent = choices[0].text;
+        btn2.textContent = choices[1].text;
+        btn1.onclick = () => handleStoryChoice(choices[0].next);
+        btn2.onclick = () => handleStoryChoice(choices[1].next);
+    } 
+    else {
+        btn1.style.display = "none";
+        btn2.style.display = "none";
+    }
+}
+
+function handleStoryChoice(nextKey) {
+
+    if (nextKey.startsWith("fight_")) {
+        startFight(nextKey);
+        return;
+    }
+
+    if (nextKey === "end") {
+        completeChapter();
+        return;
+    }
+
+    currentStoryNode = nextKey;
+    showStoryNode(currentStoryNode);
+}
+
+function startFight(fightKey) {
+    openCombat(fightKey, {
+        onWin: () => {
+            showStoryNode(currentStoryNodeAfterFight(fightKey));
+        },
+        onLose: () => {
+            restartChapter();
+        }
+    });
+}
+
+function currentStoryNodeAfterFight(fightKey) {
+    return "chapter2_2";
+}
+
+function completeChapter() {
+    chapterInProgress = false;
+
+    pendingChapterRewards.forEach(reward => addInventory(reward));
+    pendingChapterRewards = [];
+
+    currentChapter++;
+
+    setActiveMainTab('home'); // back to home
+}
+
+function restartChapter() {
+    pendingChapterRewards = [];
+    currentStoryNode = `chapter${currentChapter}_1`;
+    setActiveMainTab('home');
+    chapterInProgress = false;
+}
+
+function queueChapterReward(item) {
+    pendingChapterRewards.push(item);
+}
