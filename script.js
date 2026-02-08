@@ -262,12 +262,12 @@ const story = {
         ],
         image: "images/backgrounds/desert.png",
         choices: [
-        { text: "Kill the monsters", next: "chapter2_1_1" },
+        { text: "Kill the monsters", next: "fight_chapter2_1_1" },
         { text: "Sneak past them", next: "chapter2_1_2" }
         ]
     },
 
-    chapter2_1_1: {
+    fight_chapter2_1_1: {
         title: "",
         text: [
         "You make sure to kill every monster you see and pick up their loot. While resting, the sword begins to glow brighter and feel more intense.",
@@ -294,11 +294,11 @@ const story = {
         ],
         image: "images/backgrounds/desert.png",
         choices: [
-        { text: "Fight", next: "chapter2_2" }
+        { text: "Fight", next: "fight_chapter2_2" }
         ]
     },
 
-    chapter2_2: {
+    fight_chapter2_2: {
         title: "",
         text: [
         "You overpower the clone and beat him to a pulp. In desperation, he dashes toward the spear and yanks it from the pedestal in a split second.",
@@ -343,11 +343,11 @@ const story = {
         ],
         image: "images/backgrounds/grasslands.png",
         choices: [
-        { text: "Fight", next: "chapter3_1_3" }
+        { text: "Fight", next: "fight_chapter3_1_3" }
         ]
     },
 
-    chapter3_1_3: {
+    fight_chapter3_1_3: {
         title: "",
         text: [
         "You finally see the bow again and begin to approach it. As you pick up the bow, you notice something moving in the shadows. Upon closer inspection, you realize it is one of the clones.",
@@ -685,7 +685,7 @@ function getDamage(enemyElement, enemyRange) {
     } else if (cleanliness == "Clean") {
         baseDmg += 30
     }
-    if ((element == "Light" && enemyElement == "Dark") || (element == "Ice" && enemyElement == "Fire") || (element == "Fire" && enemyElement == "Ice") || (element == "Electric" && enemyElement == "Energy") || (element == "Ice" && enemyElement == "Water")) {
+    if ((element == "Light" && enemyElement == "Dark") || (element == "Ice" && enemyElement == "Fire") || (element == "Fire" && enemyElement == "Ice") || (element == "Electric" && enemyElement == "Energy") || (element == "Ice" && enemyElement == "Water") || (element == "Fire" && enemyElement == "Electric")) {
         baseDmg *= 1.5
     };
     if ((range === "Very Long" && (enemyRange === "Long" || enemyRange === "Short")) || (range === "Long" && enemyRange === "Short")) {
@@ -968,13 +968,12 @@ function getRandomKeyFromObj(object) {
 
 //PLAYER
 const player = {
-    equipped: "sturdyBroadsword",
+    equipped: "none",
     gold: 0
 };
 const inventory = {
     weapons: {
-        crystalPiercer: {cleanliness: "Dirty", passive: "None"},
-        sturdyBroadsword: {cleanliness: "Dirty", passive: "None"}
+
     },
     materials: {
 
@@ -1326,7 +1325,7 @@ function resetTextExplore(location) {
         finalText += string + "<br>";
     });
     if (encounterType == 'fight') {
-        finalText += `Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/enemyDmg, 0.95)*100).toFixed(2)}%`;3
+        finalText += `Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/enemyDmg, 0.95)*100).toFixed(2)}%`;
     }
     exploreText.innerHTML = finalText;
     if (encounterType == "trade") {
@@ -1393,7 +1392,9 @@ exploreOptionBtns.forEach((btn, i) => {
 });
 
 function addInventory(reward) {
-    if (reward.type === "weapon") {
+    if (typeof reward == "number") {
+        player.gold += reward;
+    } else if (reward.type === "weapon") {
         inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None" };
         return `You picked up a ${reward.item.name}`;
     } else {
@@ -1706,17 +1707,22 @@ function startStory() {
 }
 
 function showStoryNode(sceneKey) {
+    if (sceneKey === "chapter1_1_1") {
+        queueChapterReward(5);
+    } else if (sceneKey === "chapter1_2_1") {
+        queueChapterReward(15);
+    } else if (sceneKey === "chapter3_1_1") {
+        queueChapterReward({ type: "material", key: "bracelet", item: materials.bracelet});
+        queueChapterReward({ type: "material", key: "frostGem", item: materials.frostGem});
+        queueChapterReward({ type: "material", key: "shockGem", item: materials.shockGem});
+    } 
     const key = story[sceneKey];
 
-    // Background
     storyBg.style.background = `url(${key.image}) center / cover no-repeat`;
 
-    // Text
     storyText.innerHTML = key.text.map(line => `<br>${line}<br>`).join("") + "<br>";
 
-
-    // Buttons
-    const choices = key.choices || [];
+    const choices = key.choices;
 
     if (choices.length === 1) {
         btn1.style.display = "inline-block";
@@ -1757,7 +1763,7 @@ function handleStoryChoice(nextKey) {
 function startFight(fightKey) {
     openCombat(fightKey, {
         onWin: () => {
-            showStoryNode(currentStoryNodeAfterFight(fightKey));
+            showStoryNode(fightKey);
         },
         onLose: () => {
             restartChapter();
@@ -1765,8 +1771,40 @@ function startFight(fightKey) {
     });
 }
 
-function currentStoryNodeAfterFight(fightKey) {
-    return "chapter2_2";
+function openCombat(key, object) {
+    let [enemyDmg, enemyElement, enemyRange] = [0, 0, 0];
+    if (key == "fight_chapter2_1_1") {
+        enemyDmg = 125;
+        enemyElement = "Fire";
+        enemyRange = "Long";
+        storyText.innerHTML = `You encountered a gang of mummies. <br>Element: Fire<br>Reach: Long <br>Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
+    } else if (key == "fight_chapter2_2") {
+        enemyDmg = 200;
+        enemyElement = "Dark";
+        enemyRange = "Long";
+        storyText.innerHTML = `You encountered one of Peruare's clone. <br>Element: Dark<br>Reach: Long <br>Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
+    } else if (key == "fight_chapter3_1_3") {
+        enemyDmg = 300;
+        enemyElement = "Electric";
+        enemyRange = "Long";
+        storyText.innerHTML = `You encountered a group of electric spirits. <br>Element: Electric<br>Reach: Long <br>Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
+    }
+    btn1.style.display = "inline-block";
+    btn2.style.display = "none";
+    btn1.textContent = "Fight";
+    btn1.onclick = () => {
+        playAudio('audio/sword.wav');
+        if (determineWin(enemyDmg, enemyElement, enemyRange) === "Win") {
+            queueChapterReward(getReward());
+            queueChapterReward(getReward());
+            queueChapterReward(getReward());
+            queueChapterReward(getReward());
+            queueChapterReward(getReward());
+            object.onWin();
+        } else {
+            object.onLose();
+        }
+    };
 }
 
 function completeChapter() {
@@ -1774,17 +1812,25 @@ function completeChapter() {
 
     pendingChapterRewards.forEach(reward => addInventory(reward));
     pendingChapterRewards = [];
-
+    if (currentChapter == 1) {addInventory({ type: "weapon", key: "crystalPiercer", item: weapons.crystalPiercer})};
+    if (currentChapter == 2) {addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver})};
+    if (currentChapter == 3) {addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs})};
     currentChapter++;
 
-    setActiveMainTab('home'); // back to home
+    setActiveMainTab('home');
 }
 
 function restartChapter() {
-    pendingChapterRewards = [];
-    currentStoryNode = `chapter${currentChapter}_1`;
-    setActiveMainTab('home');
-    chapterInProgress = false;
+    storyText.innerHTML = "Your enemy was too strong and ended up overwhelming you and eventually you fall unconcious."
+    btn1.style.display = "inline-block";
+    btn2.style.display = "none";
+    btn1.textContent = "Continue";
+    btn1.onclick = () => {
+        pendingChapterRewards = [];
+        currentStoryNode = `chapter${currentChapter}_1`;
+        setActiveMainTab('home');
+        chapterInProgress = false;
+    };
 }
 
 function queueChapterReward(item) {
