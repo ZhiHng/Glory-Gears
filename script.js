@@ -1033,20 +1033,45 @@ archiveBtn.addEventListener('click', () => {
 });
 
 //INVENTORY
-const invWeaponTab = document.querySelector('#inventoryweapon .sub-tab-link');
-const invMaterialTab = document.querySelector('#inventorymaterial .sub-tab-link');
+const invWeaponTab = document.querySelector('#inventorymaterial .sub-tab-link:nth-child(1)');
+const invMaterialTab = document.querySelector('#inventoryweapon .sub-tab-link:nth-child(2)');
+
+var inventoryMode = "weapons";
 
 invWeaponTab.addEventListener('click', () => {
+    inventoryMode = "weapons";
     resetInventoryWeapons();
+    selectFirstInventoryItem();
 });
 
 invMaterialTab.addEventListener('click', () => {
+    console.log('yes');
+    inventoryMode = "materials";
     resetInventoryMaterials();
+    selectFirstInventoryItem();
 });
 
 function openInventory() {
     setActiveMainTab('inventory');
+
+    inventoryMode = "weapons";
     resetInventoryWeapons();
+    resetInventoryMaterials();
+    selectFirstInventoryItem();
+}
+
+function selectFirstInventoryItem() {
+    if (inventoryMode === "weapons") {
+        currentInventoryEntry = inventoryWeaponEntries[0];
+        resetItemPreview(currentInventoryEntry.object, currentInventoryEntry.owned);
+    }
+
+    if (inventoryMode === "materials") {
+        currentInventoryEntry = inventoryMaterialEntries[0];
+        resetItemPreview(currentInventoryEntry.object, currentInventoryEntry.owned);
+    }
+    updateInventoryButtons();
+    console.log(inventoryMode);
 }
 
 const weaponContainer = document.querySelector('#inventoryweapon .scrollable-section');
@@ -1085,18 +1110,12 @@ function resetInventoryWeapons() {
 
         div.addEventListener('click', () => {
             currentInventoryEntry = entry;
-            resetItemPreview(weapon);
+            resetItemPreview(weapon, owned);
             updateInventoryButtons();
         });
 
         weaponContainer.appendChild(div);
     });
-
-    if (inventoryWeaponEntries.length > 0) {
-        currentInventoryEntry = inventoryWeaponEntries[0];
-        resetItemPreview(currentInventoryEntry.object);
-        updateInventoryButtons();
-    }
 }
 
 const materialContainer = document.querySelector('#inventorymaterial .scrollable-section');
@@ -1133,25 +1152,20 @@ function resetInventoryMaterials() {
 
         div.addEventListener('click', () => {
             currentInventoryEntry = entry;
-            resetItemPreview(mat);
+            resetItemPreview(mat, owned);
             updateInventoryButtons();
         });
 
         materialContainer.appendChild(div);
     });
-
-    if (inventoryMaterialEntries.length > 0) {
-        currentInventoryEntry = inventoryMaterialEntries[0];
-        resetItemPreview(currentInventoryEntry.object);
-        updateInventoryButtons();
-    }
 }
+
 
 const invWeaponBtns = document.querySelectorAll('.inv-weapon-btn');
 const [equipBtn, enchantBtn, cleanBtn] = invWeaponBtns;
 
 function updateInventoryButtons() {
-    const isWeaponTab = document.querySelector('#inventoryweapon').classList.contains('active');
+    const isWeaponTab = inventoryMode === "weapons";
 
     invWeaponBtns.forEach(btn => {
         btn.style.display = isWeaponTab ? 'inline-block' : 'none';
@@ -1168,6 +1182,7 @@ function updateInventoryButtons() {
     enchantBtn.disabled = !owned;
     cleanBtn.disabled = !owned;
 }
+
 
 equipBtn.addEventListener('click', () => {
     if (!currentInventoryEntry?.owned) return;
@@ -1207,15 +1222,42 @@ enchantBtn.addEventListener('click', () => {
 cleanBtn.addEventListener('click', () => {
     if (!currentInventoryEntry?.owned) return;
 
-    const weaponState = inventory.weapons[currentInventoryEntry.key];
+    const key = currentInventoryEntry.key;
+    const weaponState = inventory.weapons[key];
 
-    if (weaponState.cleanliness === "Dirty") {
-        weaponState.cleanliness = "Mild Dirty";
-    } else if (weaponState.cleanliness === "Mild Dirty") {
-        weaponState.cleanliness = "Clean";
+    let soapCost = 0;
+    const spongeCost = 5;
+
+    if (weaponState.cleanliness === "Dirty") soapCost = 10;
+    else if (weaponState.cleanliness === "Mild Dirty") soapCost = 5;
+    else {
+        alert("Weapon is already clean.");
+        return;
     }
 
-    resetItemPreview(currentInventoryEntry.object);
+    if ((inventory.materials.sponge || 0) < spongeCost) {
+        alert(`Not enough sponge!`);
+        return;
+    }
+
+    if ((inventory.materials.soap || 0) < soapCost) {
+        alert(`Not enough soap!`);
+        return;
+    }
+
+    inventory.materials.sponge -= spongeCost;
+    inventory.materials.soap -= soapCost;
+
+    if (inventory.materials.sponge <= 0) delete inventory.materials.sponge;
+    if (inventory.materials.soap <= 0) delete inventory.materials.soap;
+
+    if (weaponState.cleanliness === "Dirty") weaponState.cleanliness = "Mild Dirty";
+    else if (weaponState.cleanliness === "Mild Dirty") weaponState.cleanliness = "Clean";
+
+    resetInventoryMaterials(); 
+    resetInventoryWeapons();
+
+    resetItemPreview(currentInventoryEntry.object, true);
 });
 
 //EXPLORE
@@ -1373,7 +1415,7 @@ const previewText = document.querySelectorAll('.item-details');
 const previewImg = document.querySelectorAll(".item-img");
 const sellContainer = document.querySelector('#shopsell .scrollable-section');
 
-function resetItemPreview(itemObject) {
+function resetItemPreview(itemObject, owned = true) {
     previewText.forEach(div => {
         let finalText = '';
         if (!itemObject.element) {
@@ -1394,6 +1436,12 @@ function resetItemPreview(itemObject) {
         } else {
             div.innerHTML = '';
             div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
+        }
+
+        if (!owned) {
+            div.innerHTML = '';
+            div.style.background = 'grey';
+            return;
         }
     });
 }
