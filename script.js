@@ -494,6 +494,7 @@ const weapons = {
 const materials = {
     sponge: {
         name: "Sponge",
+        key: "sponge",
         description: "A versatile cleaning equipment usable in many situations. Required to clean weapons and restore them to their peak condition. Can be obtained from shop and exploring.",
         image: "images/materials/sponge.jpeg",
         price: 2
@@ -501,6 +502,7 @@ const materials = {
 
     soap: {
         name: "Soap",
+        key: "soap",
         description: "A versatile cleaning equipment usable in many situations. Required to clean weapons and restore them to their peak condition. Can be obtained from shop and exploring.",
         image: "images/materials/soap.jpeg",
         price: 2
@@ -508,6 +510,7 @@ const materials = {
 
     crystal: {
         name: "Crystal",
+        key: "crystal",
         description: "An enhancement material known for being highly unpredictable in its effects produced. Can be used to enhance weapons to get passive effects. Can be obtained from shop and exploring.",
         image: "images/materials/crystal.jpeg",
         price: 30
@@ -515,6 +518,7 @@ const materials = {
 
     flameGem: {
         name: "Flame Gem",
+        key: "flameGem",
         description: "A precious gem imbued with fire elemental energy, known for producing effects that increase attack power of a weapon. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
         image: "images/materials/flameGem.jpeg",
         price: 60
@@ -522,6 +526,7 @@ const materials = {
 
     frostGem: {
         name: "Frost Gem",
+        key: "frostGem",
         description: "A precious gem imbued with ice elemental energy, known for producing effects that increase efficiency against certain enemy sizes. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
         image: "images/materials/frostGem.jpeg",
         price: 60
@@ -529,6 +534,7 @@ const materials = {
 
     shockGem: {
         name: "Shock Gem",
+        key: "shockGem",
         description: "A precious gem imbued with electric elemental energy, known for producing effects that multiplies attack power of a weapon. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
         image: "images/materials/shockGem.jpeg",
         price: 60
@@ -536,6 +542,7 @@ const materials = {
 
     energyGem: {
         name: "Energy Gem",
+        key: "energyGem",
         description: "A precious gem imbued with energy elemental energy, known for producing effects that increases rewards found. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
         image: "images/materials/energyGem.jpeg",
         price: 60
@@ -543,6 +550,7 @@ const materials = {
 
     ring: {
         name: "Golden ring",
+        key: "ring",
         description: "A gold ring that would fetch a high price by many. It is said to be worn by wealthy people only in the past. It does not really do much but it looks good. Can be obtained from exploring and story.",
         image: "images/materials/goldRing.jpeg",
         price: 50
@@ -550,6 +558,7 @@ const materials = {
 
     bracelet: {
         name: "Jade Bracelet",
+        key: "bracelet",
         description: "A jade bracelet that would fetch a high price by many. It is said to be worn by wealthy people only in the past. It does not really do much but it looks good. Can be obtained from exploring and story.",
         image: "images/materials/bracelet.jpeg",
         price: 40
@@ -557,6 +566,7 @@ const materials = {
 
     magicOrb: {
         name: "Magic Orb",
+        key: "magicOrb",
         description: "A powerful magic orb imbued with potent elemental energy, known for producing multiple effects that increases or multiplies the attack power, efficiency against certain enemy sizes and rewards found. Can be used to enhance weapons to get passive effects. Can be obtained from exploring and story.",
         image: "images/materials/magicOrb.jpeg",
         price: 100
@@ -969,7 +979,7 @@ function getRandomKeyFromObj(object) {
 //PLAYER
 const player = {
     equipped: "none",
-    gold: 0
+    gold: 100
 };
 const inventory = {
     weapons: {
@@ -1195,18 +1205,37 @@ enchantBtn.addEventListener('click', () => {
     if (!currentInventoryEntry?.owned) return;
 
     const enchantOptions = `
-        <b>Choose Enchant:</b><br>
-        <button class="enchant-opt" data-gem="crystal">Crystal</button>
-        <button class="enchant-opt" data-gem="flameGem">Flame Gem</button>
-        <button class="enchant-opt" data-gem="frostGem">Frost Gem</button>
-        <button class="enchant-opt" data-gem="shockGem">Shock Gem</button>
-        <button class="enchant-opt" data-gem="energyGem">Energy Gem</button>
+        <b>Select a gem to enchant the weapon with:</b><br>
+        <button class="enchant-opt">Crystal</button>
+        <button class="enchant-opt">Flame Gem</button>
+        <button class="enchant-opt">Frost Gem</button>
+        <button class="enchant-opt">Shock Gem</button>
+        <button class="enchant-opt">Energy Gem</button>
     `;
 
     previewText.forEach(div => div.innerHTML = enchantOptions);
 
-    document.querySelectorAll('.enchant-opt').forEach(btn => {
-        const gemKey = btn.dataset.gem;
+    document.querySelectorAll('.enchant-opt').forEach((btn, i) => {
+        let gemKey = "";
+        switch (i) {
+            case 0:
+                gemKey = "crystal";
+                break;
+            case 1:
+                gemKey = "flameGem";
+                break;
+            case 2:
+                gemKey = "frostGem";
+                break;
+            case 3:
+                gemKey = "shockGem";
+                break;
+            case 4:
+                gemKey = "energyGem";
+                break;
+            default:
+                break;
+        }
 
         if (!inventory.materials[gemKey]) {
             btn.disabled = true;
@@ -1214,7 +1243,20 @@ enchantBtn.addEventListener('click', () => {
         }
 
         btn.addEventListener('click', () => {
-            alert(`Enchanting with ${gemKey} (logic later)`);
+            inventory.materials[gemKey]--;
+            if (inventory.materials[gemKey] <= 0) {
+                delete inventory.materials[gemKey];
+            }
+            let passiveAdded = "";
+            if (gemKey == "crystal") {
+                let category = getRandomKeyFromObj(passives);
+                passiveAdded = passives[category][getRandomKeyFromObj(category)];
+            } else {
+                passiveAdded = passives[gemKey][getRandomKeyFromObj(passives[gemKey])];
+            }
+            
+            alert(`You enchant the weapon with a ${materials[gemKey].name} and gained the passive effect: ${passiveAdded}`);
+            inventory.weapons[currentInventoryEntry.key].passive = passiveAdded;
         });
     });
 });
@@ -1421,9 +1463,18 @@ function resetItemPreview(itemObject, owned = true) {
     previewText.forEach(div => {
         let finalText = '';
         if (!itemObject.element) {
-            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Price: ${itemObject.price}`
+            let currentQty = 0;
+            if (!!inventory.materials[itemObject.key]) {
+                currentQty = inventory.materials[itemObject.key];
+            }
+            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Price: ${itemObject.price}<br>Owned:${currentQty}`
         } else {
-            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Element: ${itemObject.element}<br>Range: ${itemObject.range}<br>Damage: ${itemObject.damage}<br>Passive: ${itemObject.passive}<br>Price: ${itemObject.price}`
+            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Element: ${itemObject.element}<br>Range: ${itemObject.range}<br>Damage: ${itemObject.damage}<br>Passive: ${itemObject.passive}`
+            let itemKey = currentInventoryEntry.key;
+            if (inventoryMode === "weapons" && inventory.weapons[itemKey]) {
+                finalText += `<br>Enhancement Passive: ${inventory.weapons[itemKey].passive}<br>Cleanliness: ${inventory.weapons[itemKey].cleanliness}`
+            }
+            finalText += `<br>Price: ${itemObject.price}`
         }
         div.innerHTML = finalText;
         
@@ -1686,10 +1737,14 @@ const archiveText = [
     `
 ]
 
-archiveContent.innerHTML = archiveText[0];
+archiveContent.innerHTML = "You have not played this chapter";
 archiveBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
-        archiveContent.innerHTML = archiveText[i];
+        let text = archiveText[i]
+        if ((!(currentChapter > 1) && i == 0) || (!(currentChapter > 2) && i == 1) || (!(currentChapter > 3) && i == 2)) {
+            text = "You have not played this chapter";
+        }
+        archiveContent.innerHTML = text;
     });
 });
 
