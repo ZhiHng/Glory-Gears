@@ -760,7 +760,7 @@ const encounters = {
             ],
             choices: ["Buy/Sell", "Trade"]
         },
-        traderGem: {
+        traderGem1: {
             text: [
             "You come accross a wandering trader.",
             "Trader: Hello fellow adventurer, do I have anything that interests you? Feel free to take a look around. The other day I came accross some mages, they were carryng those staffs. They look so cool!! Especially the gems sitting on the top of the staffs.",
@@ -808,11 +808,11 @@ const encounters = {
     },
 
     desert: {
-        traderGem: {
+        traderGem2: {
             text: [
             "You come accross a wandering trader.",
             "Trader: Hello fellow adventurer, do I have anything that interests you? Feel free to take a look around. It's really hot in the desert isn't it. I could really use something to cool me down.",
-            "I've got a special offer for you. If you have a shock gem, i'll trade it for a fire gem."
+            "I've got a special offer for you. If you have a shock gem, i'll trade it for a flame gem."
             ],
             choices: ["Buy/Sell", "Trade"]
         },
@@ -860,7 +860,7 @@ const encounters = {
             text: [
             "You come accross a wandering trader.",
             "Trader: Hello fellow adventurer, do I have anything that interests you? Feel free to take a look around. None of my weapons do much in this weather conditions man...",
-            "I've got a special offer for you. If you have a magic orb, i'll trade it for an ice gem and a fire gem."
+            "I've got a special offer for you. If you have a magic orb, i'll trade it for a frost gem and a flame gem."
             ],
             choices: ["Buy/Sell", "Trade"]
         },
@@ -946,7 +946,7 @@ const encounters = {
             ],
             choices: ["Continue"]
         },
-        text: "You can travel to the forest. It is best to be careful as you never know what might lurk in the trees. It may bring you fortune, or be your nightmare.",
+        text: "You can travel to the forest. It is best to be careful as you never know what might lurk in the trees. It may bring you fortune, or be your worst nightmare.",
         textOption: "Try your luck in the forest",
         audio: "audio/walk.wav",
         image: "images/backgrounds/forest.png"
@@ -1479,8 +1479,47 @@ exploreOptionBtns.forEach((btn, i) => {
             if (i == 0) {
                 openShop('explore');
             } else if (i == 1) {
-                //will implement if have time (special offer from individual traders)
-                //if (exploreContext.scene.includes(""))
+                if (exploreContext.scene.includes("Gold")) {
+                    if (inventory.materials.energyGem) {
+                        inventory.materials.energyGem--;
+                        if (inventory.materials.energyGem == 0) {delete inventory.materials.energyGem}
+                        addInventory({ type: "material", key: "crystal", item: materials.crystal });
+                        addInventory({ type: "material", key: "crystal", item: materials.crystal });
+                        addInventory({ type: "material", key: "crystal", item: materials.crystal });
+                        alert(`Thank you for your patronage!`);
+                    } else {
+                        alert(`You do not have enough materials.`);
+                    }
+                } else if (exploreContext.scene.includes("Gem1")) {
+                    if (inventory.materials.ring) {
+                        inventory.materials.ring--;
+                        if (inventory.materials.ring == 0) {delete inventory.materials.ring}
+                        addInventory({ type: "material", key: "soap", item: materials.soap });
+                        inventory.materials.soap += 29;
+                        alert(`Thank you for your patronage!`);
+                    } else {
+                        alert(`You do not have enough materials.`);
+                    }
+                } else if (exploreContext.scene.includes("Gem2")) {
+                    if (inventory.materials.shockGem) {
+                        inventory.materials.shockGem--;
+                        if (inventory.materials.shockGem == 0) {delete inventory.materials.shockGem}
+                        addInventory({ type: "material", key: "flameGem", item: materials.flameGem });
+                        alert(`Thank you for your patronage!`);
+                    } else {
+                        alert(`You do not have enough materials.`);
+                    }
+                } else if (exploreContext.scene.includes("Weapon")) {
+                    if (inventory.materials.magicOrb) {
+                        inventory.materials.magicOrb--;
+                        if (inventory.materials.magicOrb == 0) {delete inventory.materials.magicOrb}
+                        addInventory({ type: "material", key: "frostGem", item: materials.frostGem });
+                        addInventory({ type: "material", key: "flameGem", item: materials.flameGem });
+                        alert(`Thank you for your patronage!`);
+                    } else {
+                        alert(`You do not have enough materials.`);
+                    }
+                }
             } else if (i == 2) {
                 energy -= 1;
                 getExploreFork();
