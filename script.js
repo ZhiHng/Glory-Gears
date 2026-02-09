@@ -1,3 +1,11 @@
+document.addEventListener('click', () => {
+    new Audio('audio/click.wav').play();
+});
+
+let cpRecharge = 0;
+let icRecharge = 0;
+let taRecharge = 0;
+
 const links = document.querySelectorAll('.tab-link');
 const contents = document.querySelectorAll('.tab-content');
 
@@ -21,6 +29,22 @@ function setActiveMainTab(tabId) {
     const link = document.querySelector(`.tab-link[href="#${tabId}"]`);
 
     if (!tab) return;
+    if (inventory.weapons[player.equipped]?.uses === 0 && player.equipped != "none") {   
+        alert(`Your ${weapons[player.equipped].name} needs to recover its energy. You unequipped it.`);
+        player.equipped = "none"
+    }
+    if (cpRecharge > 4 && inventory.weapons?.crystalPiercer && inventory.weapons?.crystalPiercer?.uses != 3) {
+        cpRecharge = 0;
+        inventory.weapons.crystalPiercer.uses++;
+    }
+    if (icRecharge > 4 && inventory.weapons?.infernalCleaver && inventory.weapons?.infernalCleaver?.uses != 3) {
+        icRecharge = 0;
+        inventory.weapons.infernalCleaver.uses++;
+    }
+    if (taRecharge > 4 && inventory.weapons?.tempestArcs && inventory.weapons?.tempestArcs?.uses != 3) {
+        taRecharge = 0;
+        inventory.weapons.tempestArcs.uses++;
+    }
 
     // Deactivate all main tabs
     contents.forEach(c => c.classList.remove('active'));
@@ -29,7 +53,7 @@ function setActiveMainTab(tabId) {
     // Activate selected main tab
     tab.classList.add('active');
     link.classList.add('active');
-
+    
     // Reset sub-tabs inside this main tab
     tab.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
     tab.querySelectorAll('.sub-tab-link').forEach(l => l.classList.remove('active'));
@@ -122,6 +146,7 @@ const story = {
         "You: First things first, I must find a way to sustain myself. I need money."
         ],
         image: "images/backgrounds/jail.jpeg",
+        audio: "audio/walk.wav",
         choices: [
         { text: "Ask around houses for a job", next: "chapter1_1_1" },
         { text: "Head to the adventurer's guild", next: "chapter1_1_2" }
@@ -168,6 +193,7 @@ const story = {
         "You: How did it… do that? Is this what that passerby meant? That was insane."
         ],
         image: "images/backgrounds/forest.png",
+        audio: "audio/grassland.wav",
         choices: [
         { text: "Head back to the adventurer's guild", next: "chapter1_2_1" },
         { text: "Swiftly exit the area and ask locals about the sword's value", next: "chapter1_2_2" }
@@ -215,6 +241,7 @@ const story = {
         "Passerby: Do you want to hear the story of the legendary heroes' battle?"
         ],
         image: "images/backgrounds/shop.png",
+        audio: "audio/bell.wav",
         choices: [
         { text: "Sure, tell me about it.", next: "chapter1_3_1" },
         { text: "It's fine. Just tell me what to do next.", next: "chapter1_3_2" }
@@ -236,6 +263,7 @@ const story = {
         "In the event that it does happen, may Peruare's power have withered enough over the years for a brave new soul to finish what they set out to do that fateful day."
         ],
         image: "images/backgrounds/grasslands.png",
+        audio: "audio/grassland.wav",
         choices: [
         { text: "Continue", next: "chapter1_3_2" }
         ]
@@ -261,6 +289,7 @@ const story = {
         "The passerby gives you some money to buy heat-resistant equipment and requests that you head to the desert to retrieve the Fire Scythe. You travel long distances until you reach a forgotten temple filled with monsters."
         ],
         image: "images/backgrounds/desert.png",
+        audio: "audio/desert.wav",
         choices: [
         { text: "Kill the monsters", next: "fight_chapter2_1_1" },
         { text: "Sneak past them", next: "chapter2_1_2" }
@@ -280,6 +309,7 @@ const story = {
         "Taking this opportunity, you grab the newly transformed scythe and the crystal sword and flee the scene. Looking back, you spot two clones this time, not chasing."
         ],
         image: "images/backgrounds/desert.png",
+        audio: "audio/desert.wav",
         choices: [
         { text: "Continue", next: "end" }
         ]
@@ -306,6 +336,7 @@ const story = {
         "Looking back, you spot two clones this time, not chasing."
         ],
         image: "images/backgrounds/desert.png",
+        audio: "audio/desert.wav",
         choices: [
         { text: "Continue", next: "end" }
         ]
@@ -317,6 +348,7 @@ const story = {
         "You reach the temple, and it transports you into the sky through a rising platform. You see the bow right in the middle of the room."
         ],
         image: "images/backgrounds/grasslands.png",
+        audio: "audio/grassland.wav",
         choices: [
         { text: "Take the long, safer-looking way.", next: "chapter3_1_1" },
         { text: "Take the faster, booby-trapped-looking path.", next: "chapter3_1_2" }
@@ -355,6 +387,7 @@ const story = {
         "You: Aren't only two legendary weapons activated so far?"
         ],
         image: "images/backgrounds/grasslands.png",
+        audio: "audio/grassland.wav",
         choices: [
         { text: "Continue", next: "chapter3_2" }
         ]
@@ -696,18 +729,19 @@ function getDamage(enemyElement, enemyRange) {
         baseDmg += 30
     }
     if ((element == "Light" && enemyElement == "Dark") || (element == "Ice" && enemyElement == "Fire") || (element == "Fire" && enemyElement == "Ice") || (element == "Electric" && enemyElement == "Energy") || (element == "Ice" && enemyElement == "Water") || (element == "Fire" && enemyElement == "Electric")) {
-        baseDmg *= 1.5
+        baseDmg *= Math.min(1.2, 1.6*Math.random());
     };
     if ((range === "Very Long" && (enemyRange === "Long" || enemyRange === "Short")) || (range === "Long" && enemyRange === "Short")) {
-        baseDmg += 10
+        baseDmg += 10*Math.random();
     }
+    baseDmg += Math.round(player.level*0.3);
     //Passive not being coded into damage calculation due to complexity
     return baseDmg
 }
 
 function determineWin(enemyDamage, enemyElement, enemyRange) {
     let totalDmg = getDamage(enemyElement, enemyRange);
-    let prob = totalDmg / enemyDamage
+    let prob = totalDmg / enemyDamage + (player.level*0.15)
     if (Math.random() <= Math.min(prob, 0.95)) {
         return "Win";
     } else {
@@ -979,7 +1013,8 @@ function getRandomKeyFromObj(object) {
 //PLAYER
 const player = {
     equipped: "none",
-    gold: 100
+    gold: 0,
+    level: 1
 };
 const inventory = {
     weapons: {
@@ -1028,6 +1063,19 @@ function getRandomEncounterKey(location) {
 exploreBtn.addEventListener('click', () => {
     setActiveMainTab('explore');
     energy = 5;
+    if (player.equipped != "crystalPiercer") {
+        cpRecharge++;
+    }
+    if (player.equipped != "infernalCleaver") {
+        icRecharge++;
+    }
+    if (player.equipped != "tempestArcs") {
+        taRecharge++;
+    }
+    if (player.equipped == "crystalPiercer" || player.equipped == "infernalCleaver" || player.equipped == "tempestArcs") {
+        inventory.weapons[player.equipped].uses--;
+        
+    }
     getExploreFork()
 });
 shopBtn.addEventListener('click', () => {
@@ -1069,6 +1117,7 @@ function openInventory() {
     resetInventoryWeapons();
     resetInventoryMaterials();
     selectFirstInventoryItem();
+    playAudio('audio/materials.wav');
 }
 
 function selectFirstInventoryItem() {
@@ -1111,7 +1160,7 @@ function resetInventoryWeapons() {
         if (owned) {
             div.style.background = `url(${weapon.image}) center / contain no-repeat`;
         } else {
-            div.style.background = 'grey';
+            div.style.background = `url("images/icons/locked.png") center / contain no-repeat`;
             div.classList.add('locked'); // optional CSS styling
         }
 
@@ -1153,7 +1202,7 @@ function resetInventoryMaterials() {
         if (owned) {
             div.style.background = `url(${mat.image}) center / contain no-repeat`;
         } else {
-            div.style.background = 'grey';
+            div.style.background = `url("images/icons/locked.png") center / contain no-repeat`;
             div.classList.add('locked');
         }
 
@@ -1196,7 +1245,10 @@ function updateInventoryButtons() {
 
 equipBtn.addEventListener('click', () => {
     if (!currentInventoryEntry?.owned) return;
-
+    if (inventory.weapons[currentInventoryEntry.key]?.uses == 0) {
+        alert(`Your ${currentInventoryEntry.object.name} needs to recover its energy.`);
+        return;
+    }
     player.equipped = currentInventoryEntry.key;
     alert(`You equipped ${currentInventoryEntry.object.name}.`);
 });
@@ -1205,6 +1257,8 @@ enchantBtn.addEventListener('click', () => {
     if (!currentInventoryEntry?.owned) return;
 
     const enchantOptions = `
+        Enchanting the same item again would not stack the passive effects.<br>
+        Enchanting effects stack with the weapons' base passive effect.<br><br>
         <b>Select a gem to enchant the weapon with:</b><br>
         <button class="enchant-opt">Crystal</button>
         <button class="enchant-opt">Flame Gem</button>
@@ -1254,7 +1308,7 @@ enchantBtn.addEventListener('click', () => {
             } else {
                 passiveAdded = passives[gemKey][getRandomKeyFromObj(passives[gemKey])];
             }
-            
+            playAudio('audio/enchant.wav');
             alert(`You enchant the weapon with a ${materials[gemKey].name} and gained the passive effect: ${passiveAdded}`);
             inventory.weapons[currentInventoryEntry.key].passive = passiveAdded;
         });
@@ -1278,18 +1332,18 @@ cleanBtn.addEventListener('click', () => {
     }
 
     if ((inventory.materials.sponge || 0) < spongeCost) {
-        alert(`Not enough sponge!`);
+        alert(`Not enough sponge! You need ${spongeCost} sponge.`);
         return;
     }
 
     if ((inventory.materials.soap || 0) < soapCost) {
-        alert(`Not enough soap!`);
+        alert(`Not enough soap! You need ${soapCost} soap.`);
         return;
     }
 
     inventory.materials.sponge -= spongeCost;
     inventory.materials.soap -= soapCost;
-
+    playAudio('audio/clean.wav');
     if (inventory.materials.sponge <= 0) delete inventory.materials.sponge;
     if (inventory.materials.soap <= 0) delete inventory.materials.soap;
 
@@ -1367,7 +1421,7 @@ function resetTextExplore(location) {
         finalText += string + "<br>";
     });
     if (encounterType == 'fight') {
-        finalText += `Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/enemyDmg, 0.95)*100).toFixed(2)}%`;
+        finalText += `Estimated chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/enemyDmg, 0.95)*100).toFixed(2)}%`;
     }
     exploreText.innerHTML = finalText;
     if (encounterType == "trade") {
@@ -1398,6 +1452,7 @@ exploreOptionBtns.forEach((btn, i) => {
                 playAudio('audio/sword.wav');
                 if (determineWin(exploreContext.dmg, exploreContext.element, exploreContext.range) === "Win") {
                     exploreText.innerHTML = addInventory(getReward());
+                    player.level++;
                     exploreContext = {type: "continue"}
                 } else {
                     inventory.materials = {};
@@ -1425,6 +1480,7 @@ exploreOptionBtns.forEach((btn, i) => {
                 openShop('explore');
             } else if (i == 1) {
                 //will implement if have time (special offer from individual traders)
+                //if (exploreContext.scene.includes(""))
             } else if (i == 2) {
                 energy -= 1;
                 getExploreFork();
@@ -1437,10 +1493,14 @@ function addInventory(reward) {
     if (typeof reward == "number") {
         player.gold += reward;
     } else if (reward.type === "weapon") {
-        inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None" };
+        if (reward.key == "crystalPiercer" || reward.key == "infernalCleaver" || reward.key == "tempestArcs") {
+            inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None", uses: 3};
+        } else {
+            inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None" };
+        }
         return `You picked up a ${reward.item.name}`;
     } else {
-        if (Object.keys(inventory.materials).length < 10) {
+        if (Object.keys(inventory.materials).length < 5) {
             if (!inventory.materials[reward.key]) {
                 inventory.materials[reward.key] = 1;
             } else {
@@ -1458,6 +1518,13 @@ const buyItems = document.querySelectorAll('#shopbuy .buy-item');
 const previewText = document.querySelectorAll('.item-details');
 const previewImg = document.querySelectorAll(".item-img");
 const sellContainer = document.querySelector('#shopsell .scrollable-section');
+const goldPreview = document.querySelector("#gold-preview");
+var currentGold = null;
+function updateGoldPreview() {
+    goldPreview.innerHTML = `<img src="images/materials/coin.jpeg" style="width: 20px; height: auto;"alt="Image of a coin"> ${player.gold}`;
+    currentGold = player.gold;
+}
+
 
 function resetItemPreview(itemObject, owned = true) {
     previewText.forEach(div => {
@@ -1472,7 +1539,10 @@ function resetItemPreview(itemObject, owned = true) {
             finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Element: ${itemObject.element}<br>Range: ${itemObject.range}<br>Damage: ${itemObject.damage}<br>Passive: ${itemObject.passive}`
             let itemKey = currentInventoryEntry.key;
             if (inventoryMode === "weapons" && inventory.weapons[itemKey]) {
-                finalText += `<br>Enhancement Passive: ${inventory.weapons[itemKey].passive}<br>Cleanliness: ${inventory.weapons[itemKey].cleanliness}`
+                finalText += `<br>Enchantment Passive: ${inventory.weapons[itemKey].passive}<br>Cleanliness: ${inventory.weapons[itemKey].cleanliness}`
+                if (itemKey == "crystalPiercer" || itemKey == "infernalCleaver" || itemKey == "tempestArcs") {
+                    finalText += `<br>Current uses left (One use every 5 exploration): ${inventory.weapons[itemKey].uses}`
+                }
             }
             finalText += `<br>Price: ${itemObject.price}`
         }
@@ -1490,10 +1560,12 @@ function resetItemPreview(itemObject, owned = true) {
             div.innerHTML = '';
             div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
         }
-
+        let previewInfo = document.querySelectorAll('.preview-info');
+        previewInfo.forEach(div => {div.style.background = '#f7f7f7'})
         if (!owned) {
             div.innerHTML = '';
-            div.style.background = 'grey';
+            div.style.background = `url(${'images/icons/locked.png'}) center / contain no-repeat`;
+            previewInfo.forEach(div => {div.style.background = '#808080'});
             return;
         }
     });
@@ -1602,7 +1674,11 @@ function buyItem(key, category, object) {
     if (player.gold < object.price) {
         alert("Not enough gold!");
         return;
+    } else if (Object.keys(inventory.materials).length > 4) {
+        alert("You cannot carry anymore new materials.");
+        return;
     }
+
 
     player.gold -= object.price;
 
@@ -1616,7 +1692,9 @@ function buyItem(key, category, object) {
         inventory.weapons[key] = {cleanliness: "Dirty", passive: "None"};
     }
 
-    resetSellItems(); // shop sell page updates after buying
+    resetSellItems();
+    updateGoldPreview(); // shop sell page updates after buying
+    playAudio('audio/gold.wav');
 }
 
 function sellItem(key, cat, obj, oneOrAll) {
@@ -1659,6 +1737,8 @@ function sellItem(key, cat, obj, oneOrAll) {
     }
 
     updateShopButtons();
+    updateGoldPreview();
+    playAudio('audio/gold.wav');
 }
 
 
@@ -1706,6 +1786,8 @@ function openShop(lastTab) {
     resetItemPreview(shopPool[0].object);
     updateShopButtons();
     resetSellItems();
+    updateGoldPreview();
+    playAudio('audio/bell.wav');
 }
 
 backBtn.forEach(but => {
@@ -1772,6 +1854,9 @@ function showStoryNode(sceneKey) {
         queueChapterReward({ type: "material", key: "shockGem", item: materials.shockGem});
     } 
     const key = story[sceneKey];
+    if (key.audio) {
+        playAudio(key.audio);
+    }
 
     storyBg.style.background = `url(${key.image}) center / cover no-repeat`;
 
@@ -1832,17 +1917,17 @@ function openCombat(key, object) {
         enemyDmg = 125;
         enemyElement = "Fire";
         enemyRange = "Long";
-        storyText.innerHTML = `You encountered a gang of mummies. <br>Element: Fire<br>Reach: Long <br>Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
+        storyText.innerHTML = `You encountered a gang of mummies. <br>Element: Fire<br>Reach: Long <br>Estimated chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
     } else if (key == "fight_chapter2_2") {
         enemyDmg = 200;
         enemyElement = "Dark";
         enemyRange = "Long";
-        storyText.innerHTML = `You encountered one of Peruare's clone. <br>Element: Dark<br>Reach: Long <br>Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
+        storyText.innerHTML = `You encountered one of Peruare's clone. <br>Element: Dark<br>Reach: Long <br>Estimated chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
     } else if (key == "fight_chapter3_1_3") {
         enemyDmg = 300;
         enemyElement = "Electric";
         enemyRange = "Long";
-        storyText.innerHTML = `You encountered a group of electric spirits. <br>Element: Electric<br>Reach: Long <br>Chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
+        storyText.innerHTML = `You encountered a group of electric spirits. <br>Element: Electric<br>Reach: Long <br>Estimated chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
     }
     btn1.style.display = "inline-block";
     btn2.style.display = "none";
@@ -1871,6 +1956,9 @@ function completeChapter() {
     if (currentChapter == 2) {addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver})};
     if (currentChapter == 3) {addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs})};
     currentChapter++;
+    if (player.equipped == "crystalPiercer" || player.equipped == "infernalCleaver" || player.equipped == "tempestArcs") {
+        inventory.weapons[player.equipped].uses--;
+    }
 
     setActiveMainTab('home');
 }

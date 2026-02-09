@@ -161,6 +161,7 @@
     width: 100%;
     height: 50%;
     background: black;
+    border: none;
 }
 
 .preview-info {
@@ -169,6 +170,7 @@
     right: 0;
     width: 50%;
     height: 100vh;
+    background: #808080;
 }
 
 iframe {

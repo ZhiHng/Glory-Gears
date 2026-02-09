@@ -53,6 +53,9 @@
         </nav>
     </section>
     <section id="inventory" class="tab-content">
+        <h2>Inventory</h2>
+        <p>Only unique weapons can be stored, duplicates will drop the old weapon and pick up the new one.<br>
+        Only 5 unique materials can be collected at once.</p>
         <section id="inventoryweapon" class="sub-tab-content">
             <a class="sub-tab-link">Weapons</a><a class="sub-tab-link" href=#inventorymaterial>Materials</a>
             <div class="scrollable-section inv-weapon">
@@ -71,6 +74,7 @@
         </section>
 
         <section id="inventorymaterial" class="sub-tab-content">
+            
             <a class="sub-tab-link" href=#inventoryweapon>Weapons</a><a class="sub-tab-link">Materials</a>
             <div class="scrollable-section">
                 <!--Using JavaScript to add <div> with class="material-img"-->
@@ -99,6 +103,9 @@
     </section>
 
     <section id="shop" class="tab-content">
+        <h2>Shop</h2>
+        <p>Only unique weapons can be stored, duplicates will drop the old weapon and pick up the new one.<br>
+        Only 5 unique materials can be collected at once.</p>
         <section id="shopbuy" class="sub-tab-content">
             <a class="sub-tab-link">Buy</a><a class="sub-tab-link" href=#shopsell>Sell</a>
             <div class="scrollable-section">
@@ -127,10 +134,15 @@
             <div class="item-details"></div>
             <button class="shop-buy-sell"></button><button class="shop-buy-sell"></button>
         </section>
+        <div id="gold-preview">
+            <image src="images/materials/coin.jpeg" style="width: 20px; height: auto;" alt="Image of a coin"></image>
+            
+        </div>
         
     </section>
 
     <section id="archive" class="tab-content">
+        <h2>Archive</h2>
         <div class="bgarchive"></div>
         <div class="archivebutton">
             <button>Chapter 1: A strange sword</button>
