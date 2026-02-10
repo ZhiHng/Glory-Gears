@@ -52,7 +52,7 @@ function setActiveMainTab(tabId) {
 
     // Activate selected main tab
     tab.classList.add('active');
-    link.classList.add('active');
+    if (link) link.classList.add('active');
     
     // Reset sub-tabs inside this main tab
     tab.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
@@ -122,6 +122,10 @@ document.addEventListener("keydown", function(event) {
         case '8':
             targetId = 'archive';
             break;
+        case '9':
+            addInventory({ type: "weapon", key: "crystalPiercer", item: weapons.crystalPiercer});
+            addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver});
+            addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs});
         case '0':
             console.log(inventory);
             console.log(player);
@@ -139,7 +143,7 @@ document.addEventListener("keydown", function(event) {
 //STORY
 const story = {
     chapter1_1: {
-        title: "Chapter 1 - A Strange Sword",
+        title: "A Strange Sword",
         text: [
         "Guard: Ok, you're free to go.",
         "It's been a long time since you have experienced freedom, ever since being caught and put into jail as an accomplice for a crime, cleaning up the crime scene. You are determined to start anew.",
@@ -284,7 +288,7 @@ const story = {
     },
 
     chapter2_1: {
-        title: "Chapter 2 - Race to the Fire Scythe",
+        title: "Race to the Fire Scythe",
         text: [
         "The passerby gives you some money to buy heat-resistant equipment and requests that you head to the desert to retrieve the Fire Scythe. You travel long distances until you reach a forgotten temple filled with monsters."
         ],
@@ -343,7 +347,7 @@ const story = {
     },
 
     chapter3_1: {
-        title: "Chapter 3 - The Bow in The Sky",
+        title: "The Bow in The Sky",
         text: [
         "You reach the temple, and it transports you into the sky through a rising platform. You see the bow right in the middle of the room."
         ],
@@ -1013,12 +1017,13 @@ function getRandomKeyFromObj(object) {
 //PLAYER
 const player = {
     equipped: "none",
-    gold: 0,
-    level: 1
+    gold: 100,
+    level: 1,
+    chapter: 1
 };
 const inventory = {
     weapons: {
-
+        
     },
     materials: {
 
@@ -1573,14 +1578,14 @@ function resetItemPreview(itemObject, owned = true) {
             if (!!inventory.materials[itemObject.key]) {
                 currentQty = inventory.materials[itemObject.key];
             }
-            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Price: ${itemObject.price}<br>Owned:${currentQty}`
+            finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Price: ${itemObject.price}<br>Owned: ${currentQty}`
         } else {
             finalText += `Item Name: ${itemObject.name}<br>Description: ${itemObject.description}<br>Element: ${itemObject.element}<br>Range: ${itemObject.range}<br>Damage: ${itemObject.damage}<br>Passive: ${itemObject.passive}`
             let itemKey = currentInventoryEntry.key;
             if (inventoryMode === "weapons" && inventory.weapons[itemKey]) {
                 finalText += `<br>Enchantment Passive: ${inventory.weapons[itemKey].passive}<br>Cleanliness: ${inventory.weapons[itemKey].cleanliness}`
                 if (itemKey == "crystalPiercer" || itemKey == "infernalCleaver" || itemKey == "tempestArcs") {
-                    finalText += `<br>Current uses left (One use every 5 exploration): ${inventory.weapons[itemKey].uses}`
+                    finalText += `<br>Current uses left ( One use every 5 exploration ): ${inventory.weapons[itemKey].uses}`
                 }
             }
             finalText += `<br>Price: ${itemObject.price}`
@@ -1590,11 +1595,17 @@ function resetItemPreview(itemObject, owned = true) {
     });
     previewImg.forEach(div => {
         if (itemObject.name == "Crystal Piercer") {
-            div.innerHTML = '<iframe title="Azurelight Model" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/7475b57704c44e66a31ab516b9f558a8/embed"> </iframe>'
+            if (inventory.weapons.crystalPiercer?.cleanliness == "Clean") {
+                div.innerHTML = '<iframe title="Azurelight Model" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/7475b57704c44e66a31ab516b9f558a8/embed"> </iframe>'
+            } else if (inventory.weapons.crystalPiercer?.cleanliness == "Mild Dirty") {
+                div.innerHTML = `<iframe title="Azurelight Model (Mild Dirty)" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/ddb5e3673e20472eba6a0e828d80594d/embed"> </iframe>`
+            } else {
+                div.innerHTML = `<iframe title="Azurelight Model (Dirty)" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/ad48a3034b294fd79b9afdf854797948/embed"> </iframe>`
+            }
         } else if (itemObject.name == "Infernal Cleaver") {
             div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
         } else if (itemObject.name == "Tempest Arcs") {
-            div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
+            div.innerHTML = `<iframe title="Mitternachts Waltz" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/3d18c762bc4b4a5791f82e17224e5c8c/embed"> </iframe>`;
         } else {
             div.innerHTML = '';
             div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
@@ -1730,7 +1741,7 @@ function buyItem(key, category, object) {
     } else {
         inventory.weapons[key] = {cleanliness: "Dirty", passive: "None"};
     }
-
+    resetItemPreview(object)
     resetSellItems();
     updateGoldPreview(); // shop sell page updates after buying
     playAudio('audio/gold.wav');
@@ -1874,12 +1885,10 @@ const storyBg = document.querySelector('#story-bg');
 const btn1 = document.querySelector('#story-btn-1');
 const btn2 = document.querySelector('#story-btn-2');
 var pendingChapterRewards = [];
-var currentChapter = 1;
+var currentChapter = player.chapter;
 
 function startStory() {
-    chapterInProgress = true;
-    currentStoryNode = `chapter${currentChapter}_1`;
-    showStoryNode(currentStoryNode);
+    playLoadingScreen()
 }
 
 function showStoryNode(sceneKey) {
@@ -1995,6 +2004,7 @@ function completeChapter() {
     if (currentChapter == 2) {addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver})};
     if (currentChapter == 3) {addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs})};
     currentChapter++;
+    player.chapter++;
     if (player.equipped == "crystalPiercer" || player.equipped == "infernalCleaver" || player.equipped == "tempestArcs") {
         inventory.weapons[player.equipped].uses--;
     }
@@ -2017,4 +2027,27 @@ function restartChapter() {
 
 function queueChapterReward(item) {
     pendingChapterRewards.push(item);
+}
+
+let loadingScreen = document.querySelector('#loadingscreen');
+let chapterNo = document.querySelector('#chapter-no');
+let chapterName = document.querySelector('#chapter-name');
+
+function playLoadingScreen() {
+    setActiveMainTab('loadingscreen')
+    if (currentChapter == 1) {
+        loadingScreen.style.background = 'linear-gradient( #ACD1DE, #64CFF6)';
+    } else if (currentChapter == 2) {
+        loadingScreen.style.background = 'linear-gradient( #E4915A, #DE691B)';
+    } else if (currentChapter == 3) {
+        loadingScreen.style.background = 'linear-gradient( #B687D3, #9C1AEC)';
+    }
+    currentStoryNode = `chapter${currentChapter}_1`;
+    chapterNo.innerHTML = `<u>Chapter ${currentChapter}</u>`
+    chapterName.innerHTML = `<b>${story[currentStoryNode].title}</b>`;
+    setTimeout(() => {
+        setActiveMainTab('story');
+        chapterInProgress = true;
+        showStoryNode(currentStoryNode);
+    }, 8000);
 }

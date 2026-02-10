@@ -1,3 +1,7 @@
+* {
+    font-family: 'Itim', sans-serif;
+}
+
 .scrollable-section {
     height: 50vh; 
     width: 40vw;
@@ -176,4 +180,10 @@
 iframe {
     width: 100%;
     height: 100%;
+}
+
+#loadingscreen {
+    color: black;
+    width: 100vw;
+    height: 100vh;
 }
