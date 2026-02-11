@@ -50,6 +50,9 @@ This website is for people ages 12+ (due to some violent content in the story) w
 - [GitHub](https://github.com/)
     - Used as the remote hosting platform for the project’s Git repository, enabling collaboration, version control, and project management.
 
+- [RestDB](https://restdb.io/)
+    - Used to host API for login, sign up and game save data saving.
+
 ## Testing
 - Login Page / Sign Up Page:
     1. Click on the sign up button. See if it brings you to the sign up page.
@@ -116,8 +119,9 @@ This website is for people ages 12+ (due to some violent content in the story) w
 5. [Many Minor Clarifications](https://copilot.microsoft.com/shares/E9cd1NtVmhJtX55WGtib7): Copilot was used for minor clarifications during coding as it does not have a usage limit
     - Questions about JavaScript syntax
     - Questions about JavaScript built in functions
-6. [API](https://chatgpt.com/share/698ae853-f780-8009-afcc-3542fa6cb4a1)
-    - 
+6. [API](https://chatgpt.com/share/698ae853-f780-8009-afcc-3542fa6cb4a1): ChatGPT to help with API setup
+    - Local Storage
+    - Save Data stored on API
 
 ## Credits
 ### Content
