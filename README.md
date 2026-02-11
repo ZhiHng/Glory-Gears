@@ -129,8 +129,8 @@ References of Genshin Impact character Arlecchino's real name, Peruare in the st
 
 ### Images
 The photos used in this site were obtained from ...
-- In-game items from Genshin Impact
-- In-game scenery from Genshin Impact
+- In-game items from [Genshin Impact](https://genshin.hoyoverse.com/en/)
+- In-game scenery from [Genshin Impact](https://genshin.hoyoverse.com/en/)
 - https://www.dreamstime.com/royalty-free-stock-images-bubbles-image5024929
 - https://www.istockphoto.com/photo/simple-plain-bar-of-soap-gm537488461-58249696
 - https://hardwarecity.com.sg/prod/river-premium-car-wash-sponge-super-absorbent?srsltid=AfmBOoo9Yim-rJZVlpiFEZdcSA7oGU2A8MAt4vczX3dJ7j07Nhu18zyC

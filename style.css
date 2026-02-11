@@ -187,3 +187,41 @@ iframe {
     width: 100vw;
     height: 100vh;
 }
+
+.logo-section {
+    display: flex;
+    height: 100vh;
+    width: 60vw;
+    background: url("images/gameLogoBackground.png") center / cover no-repeat;
+    margin-left: auto;
+}
+
+.logo-section img {
+    margin: auto;
+    width: 50vw;
+    height: auto;
+}
+
+.login-signup {
+    position: absolute;
+    width: 50vw;
+    height: 100vh;
+}
+
+#login {
+    position: relative;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#signup {
+    position: relative;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: row;
+    justify-content: center;
+}
