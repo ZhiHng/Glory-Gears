@@ -202,10 +202,18 @@ iframe {
     height: auto;
 }
 
+.studio-logo {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
 .login-signup {
+    display: flex;
     position: absolute;
     width: 50vw;
     height: 100vh;
+    flex-direction: column;
 }
 
 #login {
@@ -225,3 +233,4 @@ iframe {
     flex-direction: row;
     justify-content: center;
 }
+
