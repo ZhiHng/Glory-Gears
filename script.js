@@ -1,3 +1,21 @@
+//PLAYER
+const player = {
+    equipped: "none",
+    gold: 0,
+    level: 1,
+    chapter: 1
+};
+const inventory = {
+    weapons: {
+        
+    },
+    materials: {
+
+    }
+};
+
+loadLocal();
+
 document.addEventListener('click', () => {
     new Audio('audio/click.wav').play();
 });
@@ -64,6 +82,7 @@ function setActiveMainTab(tabId) {
     firstSubContent?.classList.add('active');
     firstSubLink?.classList.add('active');
 
+    saveLocal();
     window.scrollTo({ top: 0 });
 }
 
@@ -430,7 +449,7 @@ const weapons = {
 
     infernalCleaver: {
         name: "Infernal Cleaver",
-        description: "A legendary mystical scythe once weilded by the hero of flame. It is known for emmiting scorching heat and its dual forms. Can be obtained from Chapter 2.",
+        description: "A legendary mystical scythe once weilded by the hero of flame. It is known for emitting scorching heat and its dual forms. Can be obtained from Chapter 2.",
         element: "Fire",
         range: "Long",
         damage: 40,
@@ -485,7 +504,7 @@ const weapons = {
 
     frostSpear: {
         name: "Frost Spear",
-        description: "A long spear that is imbued with ice elemental powers, forged from a Frost Gem. It is capable of emmiting ice elemental attacks to a reasonable extent. Can be obtained from exploring.",
+        description: "A long spear that is imbued with ice elemental powers, forged from a Frost Gem. It is capable of emitting ice elemental attacks to a reasonable extent. Can be obtained from exploring.",
         element: "Ice",
         range: "Long",
         damage: 16,
@@ -496,7 +515,7 @@ const weapons = {
 
     frostSword: {
         name: "Frost Sword",
-        description: "A sleek sword that is imbued with ice elemental powers, forged from a Frost Gem. It is capable of emmiting ice elemental attacks to a reasonable extent. Can be obtained from shop.",
+        description: "A sleek sword that is imbued with ice elemental powers, forged from a Frost Gem. It is capable of emitting ice elemental attacks to a reasonable extent. Can be obtained from shop.",
         element: "Ice",
         range: "Short",
         damage: 17,
@@ -507,7 +526,7 @@ const weapons = {
 
     flameSpear: {
         name: "Flame Spear",
-        description: "A long spear that is imbued with fire elemental powers, forged from a Flame Gem. It is capable of emmiting fire elemental attacks to a reasonable extent. Can be obtained from exploring.",
+        description: "A long spear that is imbued with fire elemental powers, forged from a Flame Gem. It is capable of emitting fire elemental attacks to a reasonable extent. Can be obtained from exploring.",
         element: "Fire",
         range: "Long",
         damage: 17,
@@ -518,7 +537,7 @@ const weapons = {
 
     flameSword: {
         name: "Flame Sword",
-        description: "A sleek sword that is imbued with fire elemental powers, forged from a Flame Gem. It is capable of emmiting fire elemental attacks to a reasonable extent. Can be obtained from shop.",
+        description: "A sleek sword that is imbued with fire elemental powers, forged from a Flame Gem. It is capable of emitting fire elemental attacks to a reasonable extent. Can be obtained from shop.",
         element: "Fire",
         range: "Short",
         damage: 18,
@@ -1011,23 +1030,6 @@ function getRandomKeyFromObj(object) {
     let randomKey = keys[Math.floor(Math.random() * keys.length)];
 
     return randomKey;
-};
-
-
-//PLAYER
-const player = {
-    equipped: "none",
-    gold: 100,
-    level: 1,
-    chapter: 1
-};
-const inventory = {
-    weapons: {
-        
-    },
-    materials: {
-
-    }
 };
 
 //MAIN INTERACTION
@@ -1603,7 +1605,7 @@ function resetItemPreview(itemObject, owned = true) {
                 div.innerHTML = `<iframe title="Azurelight Model (Dirty)" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/ad48a3034b294fd79b9afdf854797948/embed"> </iframe>`
             }
         } else if (itemObject.name == "Infernal Cleaver") {
-            div.style.background = `url(${itemObject.image}) center / contain no-repeat`;
+            div.innerHTML = `<iframe title="Crimson Moon Semblance" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/0820d321c00a4e51b10d914a44c4fae9/embed"> </iframe>`;
         } else if (itemObject.name == "Tempest Arcs") {
             div.innerHTML = `<iframe title="Mitternachts Waltz" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/3d18c762bc4b4a5791f82e17224e5c8c/embed"> </iframe>`;
         } else {
