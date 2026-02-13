@@ -8,14 +8,18 @@
     <link href="style.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="shortcut icon" type="images/png" href="images/icons/gameIcon.png">
     <link href="https://fonts.googleapis.com/css2?family=Itim&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
 </head>
 
 <body>
     <section id="login" class="tab-content">
         <div class="login-signup">
-            <img src="images/studioLogo.png" alt="Image of ImbalancedSkillset Studios Logo." class="studio-logo">
             <form action="#home" method="get">
+            <div class="logo-section">
+                <img src="images/studioLogo.png" alt="Imbalanced Skillset Studio Logo">
+            </div>
             <h2>Login</h2>
             <div class="input-group">
                 <label for="username"></label>
@@ -27,17 +31,17 @@
             </div>
             <button type="submit">Login</button>
             </form>
-            <a href=#signup class="tab-link">Sign Up</a>
-        </div>
-        <div class="logo-section">
-            <img src="images/gameLogo.png" alt="Image of Glory Gears game logo.">
+            <a href=#signup class="tab-link" id="si-btn">Sign Up</a>
         </div>
     </section>
 
-    <section id="signup" class="tab-content">  
+    <section id="signup" class="tab-content">
+        
         <div class="login-signup">
-            <img src="images/studioLogo.png" alt="Image of ImbalancedSkillset Studios Logo." class="studio-logo">
             <form action="#login" method="get">
+            <div class="logo-section">
+                <img src="images/studioLogo.png" alt="Imbalanced Skillset Studio Logo">
+            </div>
             <h2>Sign Up</h2>
             <div class="input-group">
                 <label for="username"></label>
@@ -49,29 +53,27 @@
             </div>
             <button type="submit">Sign Up</button>
             </form>
-            <a href=#login class="tab-link">Login</a>
-        </div>
-        <div class="logo-section">
-            <img src="images/gameLogo.png" alt="Image of Glory Gears game logo.">
+            <a href=#login class="tab-link" id="li-btn">Login</a>
         </div>
     </section> 
-
     <section id="home" class="tab-content">
         <div class="bghome"></div>
         <nav>
             <a href=#inventory class="tab-link" id="inv-btn">Inventory</a>
             <a href=#archive class="tab-link" id="archive-btn">Archive</a>
-            <br>
             <a href=#story class="tab-link" id="story-btn">Story</a>
             <a href=#explore class="tab-link" id="explore-btn">Explore</a>
             <a href=#shop class="tab-link" id="shop-btn">Shop</a>
         </nav>
     </section>
     <section id="inventory" class="tab-content">
-        <h2>Inventory</h2>
-        <p>Only unique weapons can be stored, duplicates will drop the old weapon and pick up the new one.<br>
-        Only 5 unique materials can be collected at once.<br>
-        Cleaning weapons increase damage dealt.</p>
+        <div class="inventory-header">
+            <h2>Inventory</h2>
+            <div class="info-box">
+                <p>Only unique weapons can be stored, duplicates will drop the old weapon and pick up the new one. <br> Only 5 unique materials can be collected at once. <br> Cleaning weapons increase damage dealt.</p>
+            </div>
+            <button class="back-btn">Back</button>
+        </div>
         <section id="inventoryweapon" class="sub-tab-content">
             <a class="sub-tab-link">Weapons</a><a class="sub-tab-link" href=#inventorymaterial>Materials</a>
             <div class="scrollable-section inv-weapon">
@@ -86,42 +88,46 @@
                 <div class='weapon-img'></div>
                 <div class='weapon-img'></div>
             </div>
-            <button class="inv-weapon-btn">Equip</button><button class="inv-weapon-btn">Enchant</button><button class="inv-weapon-btn">Clean</button>
         </section>
-
         <section id="inventorymaterial" class="sub-tab-content">
-            
             <a class="sub-tab-link" href=#inventoryweapon>Weapons</a><a class="sub-tab-link">Materials</a>
             <div class="scrollable-section">
                 <!--Using JavaScript to add <div> with class="material-img"-->
             </div>
         </section>
         <section class="preview-info">
-            <button class="back-btn">Back</button>
             <div class="item-img"></div>
-            <div class="item-details"><!--For enchant, will use JavaScript to add <button> with class--></div>
+            <div class="side-by-side">
+                <button class="inv-weapon-btn">Equip</button><button class="inv-weapon-btn">Enchant</button><button class="inv-weapon-btn">Clean</button>
+            </div>
+            <div class="item-details"><!--For enchant, will use JavaScript to add <button> with class="enchant-opt"--></div>
         </section>
     </section>
-
     <section id="story" class="tab-content">
         <div id="story-bg"></div>
         <div class="text-box" id="story-text"></div>
-        <button class="story-options" id="story-btn-1">Option 1</button><button class="story-options" id="story-btn-2">Option 2</button>
+        <div class="options-container">
+            <button class="story-options" id="story-btn-1">Option 1</button><button class="story-options" id="story-btn-2">Option 2</button>
+        </div>
     </section>
-
     <section id="explore" class="tab-content">
         <div class="bg-explore" id="bg-explore1"></div>
         <div class="bg-explore" id="bg-explore2"></div>
         <div class="text-box" id="explore-text">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit 
         </div>
-        <button class="explore-option">Grassy Plains</button><button class="explore-option">Cave</button><button class="explore-option">Go back to town</button>
+        <div class="options-container">
+            <button class="explore-option">Grassy Plains</button><button class="explore-option">Cave</button><button class="explore-option">Go back to town</button>
+        </div>
     </section>
-
     <section id="shop" class="tab-content">
-        <h2>Shop</h2>
-        <p>Only unique weapons can be stored, duplicates will drop the old weapon and pick up the new one.<br>
-        Only 5 unique materials can be collected at once.</p>
+        <div class="shop-header">
+            <h2>Shop</h2>
+            <div class="info-box">
+                <p>Only unique weapons can be stored, duplicates will drop the old weapon and pick up the new one. Only 5 unique materials can be collected at once.</p>
+            </div>
+            <button class="back-btn">Back</button>
+        </div>
         <section id="shopbuy" class="sub-tab-content">
             <a class="sub-tab-link">Buy</a><a class="sub-tab-link" href=#shopsell>Sell</a>
             <div class="scrollable-section">
@@ -134,48 +140,51 @@
                 <div class='buy-item'></div>
                 <div class='buy-item'></div>
             </div>
-            
         </section>
-
         <section id="shopsell" class="sub-tab-content">
             <a class="sub-tab-link" href=#shopbuy>Buy</a><a class="sub-tab-link">Sell</a>
             <div class="scrollable-section">
                 <!--Using JavaScript to add <div> with class="sell-item"-->
             </div>
-            
         </section>
         <section class="preview-info">
-            <button class="back-btn">Back</button>
             <div class="item-img"></div>
             <div class="item-details"></div>
-            <button class="shop-buy-sell"></button><button class="shop-buy-sell"></button>
+            <div class="side-by-side">
+                <button class="shop-buy-sell"></button><button class="shop-buy-sell"></button>
+            </div>            
         </section>
         <div id="gold-preview">
-            <image src="images/materials/coin.jpeg" style="width: 20px; height: auto;" alt="Image of a coin"></image>
-            
+            <image src="images/materials/coin.jpeg" style="width: 20px; height: auto;" alt="Image of a coin"></image>  
         </div>
-        
     </section>
-
     <section id="archive" class="tab-content">
-        <h2>Archive</h2>
-        <div class="bgarchive"></div>
-        <div class="archivebutton">
-            <button>Chapter 1: A strange sword</button>
-            <button>Chapter 2: Race to the fire scythe</button>
-            <button>Chapter 3: The bow in the sky</button>
-            <button>Chapter 4: The staff in the depths</button>
-            <button>Chapter 5: Trust</button>
-            <button>Chapter 6: Final Clash</button>
-            <button>Heroes Battle</button>
+        <div class="archive-header">
+            <h2>Archive</h2>
+            <button class="back-btn">Back</button>
         </div>
+        <div class="bgarchive"></div>
+        <div class="archive-container">
+            <div class="archivebutton">
+                <button class="archive-item">Chapter 1: A strange sword</button>
+                <button class="archive-item">Chapter 2: Race to the fire scythe</button>
+                <button class="archive-item">Chapter 3: The bow in the sky</button>
+                <button class="archive-item">Chapter 4: The staff in the depths</button>
+                <button class="archive-item">Chapter 5: Trust</button>
+                <button class="archive-item">Chapter 6: Final Clash</button>
+                <button class="archive-item">Heroes Battle</button>
+            </div>
         <div id="archive-content"></div>
-        <button class="back-btn">Back</button>
     </section>
     <section id="loadingscreen" class="tab-content">
-        <p id="chapter-no"></p>
-        <h1 id="chapter-name"></h1>
-        <!--Lottie-->
+        <div class="chapter-container">
+            <p id="chapter-no"></p>
+            <h1 id="chapter-name"></h1>
+        </div>
+        <div class="loading-status">
+        <span>Loading...</span>
+            <dotlottie-wc src="https://lottie.host/3b14c969-afa1-4257-a13c-f41e1761f817/c3nNA62ulp.lottie" style="width: 200px; height: 100px" autoplay loop></dotlottie-wc>
+        </div>
     </section>
     <script src="script.js" defer></script>
 </body>

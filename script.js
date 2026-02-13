@@ -14,8 +14,6 @@ const inventory = {
     }
 };
 
-loadLocal();
-
 document.addEventListener('click', () => {
     new Audio('audio/click.wav').play();
 });
@@ -116,6 +114,7 @@ sublinks.forEach(link => {
 });
 
 document.addEventListener("keydown", function(event) {
+    let targetId = '';
     switch (event.key) {
         case '1':
             targetId = 'login';
@@ -152,9 +151,7 @@ document.addEventListener("keydown", function(event) {
         default:
             break;
     }
-    contents.forEach(content => content.classList.remove('active'));2
-    links.forEach(l => l.classList.remove('active'));
-    document.getElementById(targetId).classList.add('active'); //activate clicked tab elements
+    setActiveMainTab(targetId);
     window.scrollTo({top: 0});
 });
 
@@ -274,16 +271,16 @@ const story = {
     chapter1_3_1: {
         title: "",
         text: [
-        "It is said that the heroes of the past who wielded the five legendary weapons united to fight the calamity and its ruler, Peruare. Due to unforeseen circumstances, during the final moments of Peruare, he decomposed his physical form to amplify his spiritual body and fused together with the legendary weapons.",
-        "The heroes celebrated the fall of the calamity and set out on their own paths. Over the days, there were rumors of sightings of Peruare roaming the wilderness. Reports came in of adventurers noticing Peruare feeding on animals and monsters, growing stronger and releasing more chaotic aura each time. By the time the heroes caught wind of the incident, it was already too late. The clones had grown incredibly strong.",
+        "It is said that the heroes of the past who wielded the five legendary weapons united to fight the calamity and its ruler, Peruere. Due to unforeseen circumstances, during the final moments of Peruere, he decomposed his physical form to amplify his spiritual body and fused together with the legendary weapons.",
+        "The heroes celebrated the fall of the calamity and set out on their own paths. Over the days, there were rumors of sightings of Peruere roaming the wilderness. Reports came in of adventurers noticing Peruere feeding on animals and monsters, growing stronger and releasing more chaotic aura each time. By the time the heroes caught wind of the incident, it was already too late. The clones had grown incredibly strong.",
         "During clashes with each hero, they noticed that the clones only went after their weapons. Each time the clones were killed, they came back after a few days. In one clash between a hero and a clone, the hero was pulled down along with the clone into a bottomless chasm. However, once they fell to the bottom, their weapons started losing their vitality, and so did the clone.",
-        "The hero concluded that the clones were manifesting from the weapons and that Peruare's soul was merged into them. The only way to stop the clones was to drain the weapons' power by covering them from sunlight.",
-        "Having suspicion, the hero set out to warn the other heroes, only to find there were more clones after the other heroes' swords. The heroes suspected the clones were trying to bring the legendary weapons together to fuse Peruare's soul back together and revive him.",
-        "They came up with a plan to bring the weapons together and shatter them all at once to finally defeat Peruare. But terror struck when they heard one hero had fallen with one legendary weapon now in the calamity's possession. They also noticed the clones becoming stronger day by day.",
+        "The hero concluded that the clones were manifesting from the weapons and that Peruere's soul was merged into them. The only way to stop the clones was to drain the weapons' power by covering them from sunlight.",
+        "Having suspicion, the hero set out to warn the other heroes, only to find there were more clones after the other heroes' swords. The heroes suspected the clones were trying to bring the legendary weapons together to fuse Peruere's soul back together and revive him.",
+        "They came up with a plan to bring the weapons together and shatter them all at once to finally defeat Peruere. But terror struck when they heard one hero had fallen with one legendary weapon now in the calamity's possession. They also noticed the clones becoming stronger day by day.",
         "Facing this, they decided not to risk losing their weapons to the calamity, with no guarantee they could break all the weapons at the same time to end it. Instead, they buried their weapons in different regions around the world, preventing the calamity from locating them.",
         "With their weapons' power drained, the clones' numbers were also reduced to one. In a final hope, they launched an all-out attack on the final clone to steal the weapon and prevent the calamity from recurring again. The heroes fell one after another, with the final hero throwing the last weapon into a deep cave, perishing after being impaled at the last second.",
         "Little did they know, some light was still reachable inside the cave. Though not enough energy to climb out, the final clone lay dormant there for eternity. All the heroes could hope for was that no one would ever find the legendary weapons and expose them to sunlight, powering the weapons and bringing the clones back.",
-        "In the event that it does happen, may Peruare's power have withered enough over the years for a brave new soul to finish what they set out to do that fateful day."
+        "In the event that it does happen, may Peruere's power have withered enough over the years for a brave new soul to finish what they set out to do that fateful day."
         ],
         image: "images/backgrounds/grasslands.png",
         audio: "audio/grassland.wav",
@@ -1859,23 +1856,30 @@ const archiveText = [
     "You have not played this chapter",
     "You have not played this chapter",
     "You have not played this chapter",
-    `It is said that the heroes of the past who wielded the five legendary weapons united to fight the calamity and its ruler, Peruare. Due to unforeseen circumstances, during the final moments of Peruare, he decomposed his physical form to amplify his spiritual body and fused together with the legendary weapons. 
-    <br>The heroes celebrated the fall of the calamity and set out on their own paths. Over the days, there were rumors of sightings of Peruare roaming the wilderness. Reports came in of adventurers noticing Peruare feeding on animals and monsters, growing stronger and releasing more chaotic aura each time. By the time the heroes caught wind of the incident, it was already too late. The clones had grown incredibly strong. <br>During clashes with each hero, they noticed that the clones only went after their weapons. Each time the clones were killed, they came back after a few days. In one clash between a hero and a clone, the hero was pulled down along with the clone into a bottomless chasm. However, once they fell to the bottom, their weapons started losing their vitality, and so did the clone. 
-    <br>The hero concluded that the clones were manifesting from the weapons and that Peruare's soul was merged into them. The only way to stop the clones was to drain the weapons' power by covering them from sunlight.
-    <br>Having suspicion, the hero set out to warn the other heroes, only to find there were more clones after the other heroes' swords. The heroes suspected the clones were trying to bring the legendary weapons together to fuse Peruare's soul back together and revive him.
-    <br>They came up with a plan to bring the weapons together and shatter them all at once to finally defeat Peruare. But terror struck when they heard one hero had fallen with one legendary weapon now in the calamity's possession. They also noticed the clones becoming stronger day by day.
+    `It is said that the heroes of the past who wielded the five legendary weapons united to fight the calamity and its ruler, Peruere. Due to unforeseen circumstances, during the final moments of Peruere, he decomposed his physical form to amplify his spiritual body and fused together with the legendary weapons. 
+    <br>The heroes celebrated the fall of the calamity and set out on their own paths. Over the days, there were rumors of sightings of Peruere roaming the wilderness. Reports came in of adventurers noticing Peruere feeding on animals and monsters, growing stronger and releasing more chaotic aura each time. By the time the heroes caught wind of the incident, it was already too late. The clones had grown incredibly strong. <br>During clashes with each hero, they noticed that the clones only went after their weapons. Each time the clones were killed, they came back after a few days. In one clash between a hero and a clone, the hero was pulled down along with the clone into a bottomless chasm. However, once they fell to the bottom, their weapons started losing their vitality, and so did the clone. 
+    <br>The hero concluded that the clones were manifesting from the weapons and that Peruere's soul was merged into them. The only way to stop the clones was to drain the weapons' power by covering them from sunlight.
+    <br>Having suspicion, the hero set out to warn the other heroes, only to find there were more clones after the other heroes' swords. The heroes suspected the clones were trying to bring the legendary weapons together to fuse Peruere's soul back together and revive him.
+    <br>They came up with a plan to bring the weapons together and shatter them all at once to finally defeat Peruere. But terror struck when they heard one hero had fallen with one legendary weapon now in the calamity's possession. They also noticed the clones becoming stronger day by day.
     <br>Facing this, they decided not to risk losing their weapons to the calamity, with no guarantee they could break all the weapons at the same time to end it. Instead, they buried their weapons in different regions around the world, preventing the calamity from locating them.
     <br>With their weapons' power drained, the clones' numbers were also reduced to one. In a final hope, they launched an all-out attack on the final clone to steal the weapon and prevent the calamity from recurring again. The heroes fell one after another, with the final hero throwing the last weapon into a deep cave, perishing after being impaled at the last second.
     <br>Little did they know, some light was still reachable inside the cave. Though not enough energy to climb out, the final clone lay dormant there for eternity. All the heroes could hope for was that no one would ever find the legendary weapons and expose them to sunlight, powering the weapons and bringing the clones back.
-    <br>In the event that it does happen, may Peruare's power have withered enough over the years for a brave new soul to finish what they set out to do that fateful day.
+    <br>In the event that it does happen, may Peruere's power have withered enough over the years for a brave new soul to finish what they set out to do that fateful day.
     `
 ]
 
-archiveContent.innerHTML = "You have not played this chapter";
+var currentChapter = player.chapter;
+
+if (currentChapter == 1) {
+    archiveContent.innerHTML = "You have not played this chapter";
+} else {
+    archiveContent.innerHTML = archiveText[0];
+}
+
 archiveBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
         let text = archiveText[i]
-        if ((!(currentChapter > 1) && i == 0) || (!(currentChapter > 2) && i == 1) || (!(currentChapter > 3) && i == 2)) {
+        if ((!(currentChapter > 1) && i == 0 || i== 6) || (!(currentChapter > 2) && i == 1) || (!(currentChapter > 3) && i == 2)) {
             text = "You have not played this chapter";
         }
         archiveContent.innerHTML = text;
@@ -1887,9 +1891,13 @@ const storyBg = document.querySelector('#story-bg');
 const btn1 = document.querySelector('#story-btn-1');
 const btn2 = document.querySelector('#story-btn-2');
 var pendingChapterRewards = [];
-var currentChapter = player.chapter;
 
 function startStory() {
+    if (currentChapter > 3) {
+        alert('Stay tuned for more future content!')
+        setActiveMainTab('home');
+        return;
+    }    
     playLoadingScreen()
 }
 
@@ -1972,7 +1980,7 @@ function openCombat(key, object) {
         enemyDmg = 200;
         enemyElement = "Dark";
         enemyRange = "Long";
-        storyText.innerHTML = `You encountered one of Peruare's clone. <br>Element: Dark<br>Reach: Long <br>Estimated chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
+        storyText.innerHTML = `You encountered one of Peruere's clone. <br>Element: Dark<br>Reach: Long <br>Estimated chance of victory: ${(Math.min(getDamage(enemyElement, enemyRange)/ enemyDmg, 0.95)*100).toFixed(2)}%`;
     } else if (key == "fight_chapter3_1_3") {
         enemyDmg = 300;
         enemyElement = "Electric";
@@ -2052,4 +2060,39 @@ function playLoadingScreen() {
         chapterInProgress = true;
         showStoryNode(currentStoryNode);
     }, 8000);
+}
+
+function buildSaveData() {
+  return {
+    player: {
+      equipped: player.equipped,
+      gold: player.gold,
+      level: player.level,
+      chapter: player.chapter
+    },
+    inventory: {
+      weapons: inventory.weapons,
+      materials: inventory.materials
+    },
+    lastSave: Date.now()
+  };
+}
+
+function saveLocal() {
+  const saveData = buildSaveData();
+  localStorage.setItem('gloryGearsSave', JSON.stringify(saveData));
+}
+
+function loadLocal() {
+  const data = localStorage.getItem('gloryGearsSave');
+  if (!data) return false;
+
+  const save = JSON.parse(data);
+
+  Object.assign(player, save.player);
+  inventory.weapons = save.inventory.weapons || {};
+  inventory.materials = save.inventory.materials || {};
+
+  console.log("Loaded local save:", save);
+  return true;
 }
