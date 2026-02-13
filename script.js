@@ -1,3 +1,10 @@
+guestLogin = document.querySelectorAll('.guest-login');
+guestLogin.forEach(btn => {
+btn.addEventListener('click', () => {
+setActiveMainTab('home');
+});
+});
+
 //PLAYER
 const player = {
     equipped: "none",

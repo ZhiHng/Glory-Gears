@@ -501,7 +501,7 @@ iframe {
   letter-spacing: 1px;
 }
 
-.login-signup button {
+.enter-details {
   margin-top: 1rem;
   padding: 0.9rem;
   background: #93D283;
@@ -514,8 +514,36 @@ iframe {
   border-radius: 4px;
 }
 
-.login-signup button:hover {
+.enter-details:hover {
   background: #7BB16D;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.enter-details, .guest-login {
+  margin-top: 0; 
+}
+
+.guest-login {
+  margin-right: 1rem;
+  padding: 0.9rem;
+  background: #7a7979;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.guest-login:hover {
+    background-color: #595959 ;
 }
 
 .login-signup .tab-link {
