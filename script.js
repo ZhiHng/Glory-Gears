@@ -1,10 +1,3 @@
-guestLogin = document.querySelectorAll('.guest-login');
-guestLogin.forEach(btn => {
-btn.addEventListener('click', () => {
-setActiveMainTab('home');
-});
-});
-
 //PLAYER
 const player = {
     equipped: "none",
@@ -20,6 +13,215 @@ const inventory = {
 
     }
 };
+
+loadLocal()
+
+// API
+document.addEventListener("DOMContentLoaded", function () {
+    
+    const APIKEY = "698efea6bf4bccdbda53e4f4";
+    let accountData = {
+        accountId: [],
+        username: [],
+        password: [],
+        savedata: []
+    };
+    
+    let accountsLoaded = false;
+    getAccounts();
+
+    // LOGIN
+    document.getElementById("submit-login").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        if (!accountsLoaded) {
+            alert("Still loading accounts, please try again in a moment.");
+            return;
+        }
+
+        let usernameLogin = document.getElementById("username-login").value;
+        let passwordLogin = document.getElementById("password-login").value;
+
+        if (usernameLogin === "" || passwordLogin === "") {
+            alert('Please fill in the required fields!');
+            return;
+        }
+
+        if (accountData.username.includes(usernameLogin)) {
+            let index = accountData.username.indexOf(usernameLogin);
+
+            if (passwordLogin === accountData.password[index]) {
+                Object.assign(player, accountData.savedata[index].player);
+                inventory.weapons = accountData.savedata[index].inventory.weapons || {};
+                inventory.materials = accountData.savedata[index].inventory.materials || {};
+                currentChapter = player.chapter;
+
+                localStorage.setItem("accountId", accountData.accountId[index]);
+                localStorage.removeItem("gloryGearsSave");
+                localStorage.setItem("gloryGearsSave", JSON.stringify(buildSaveData()));
+                saveLocal();
+                setActiveMainTab('home');
+            } else {
+                alert('Username or Password is incorrect!');
+                document.getElementById("login-form").reset();
+            }
+        } else {
+            alert("Account not found!");
+        }
+    });
+
+    // SIGNUP
+    document.getElementById("submit-signup").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let usernameSignup = document.getElementById("username-signup").value;
+        let passwordSignup = document.getElementById("password-signup").value;
+
+        if (usernameSignup === "" || passwordSignup === "") {
+            alert('Please fill in the required fields!');
+            return;
+        }
+        if (usernameSignup.length < 3) {
+            alert("Username must be at least 3 characters.");
+            return;
+        }
+
+        if (accountData.username.includes(usernameSignup)) {
+            alert("Username already exists. Please choose another one.");
+            return;
+        }
+
+        let jsondata = {
+            username: usernameSignup,
+            password: passwordSignup,
+            savedata: {
+                player: {
+                    equipped: "none",
+                    gold: 0,
+                    level: 1,
+                    chapter: 1
+                },
+                inventory: {
+                    weapons: {},
+                    materials: {}
+                },
+                lastSave: Date.now()
+            }
+        };
+
+        document.getElementById("submit-signup").disabled = true;  
+        fetch("https://glorygears-4a39.restdb.io/rest/accounts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache"
+            },
+            body: JSON.stringify(jsondata),
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Account created:", data);
+            localStorage.removeItem("gloryGearsSave");
+            localStorage.setItem("accountId", data._id);
+            localStorage.setItem("gloryGearsSave", JSON.stringify(jsondata.savedata));
+            currentChapter = player.chapter;
+            Object.assign(player, jsondata.savedata.player);
+            inventory.weapons = {};
+            inventory.materials = {};
+            saveLocal();
+
+            setActiveMainTab('home');
+            
+        })
+        .finally(() => {
+            document.getElementById("submit-signup").disabled = false;
+        });
+    });
+
+    // FETCH ACCOUNTS
+    function getAccounts() {
+        fetch("https://glorygears-4a39.restdb.io/rest/accounts", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "x-apikey": APIKEY,
+                "Cache-Control": "no-cache"
+            }
+        })
+        .then(res => res.json())
+        .then(response => {
+            accountData.accountId = [];
+            accountData.username = [];
+            accountData.password = [];
+            accountData.savedata = [];
+
+            for (let i = 0; i < response.length; i++) {
+                accountData.accountId.push(response[i]._id);
+                accountData.username.push(response[i].username);
+                accountData.password.push(response[i].password);
+                accountData.savedata.push(response[i].savedata);
+            }
+
+            console.log("Accounts loaded:", accountData);
+            accountsLoaded = true;
+        });
+    }
+});
+
+function saveToApi() {
+    saveLocal();
+
+    const accountId = localStorage.getItem("accountId");
+    if (!accountId || accountId === "Guest") return;
+
+    const saveData = buildSaveData();
+
+    fetch(`https://glorygears-4a39.restdb.io/rest/accounts/${accountId}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "x-apikey": "698efea6bf4bccdbda53e4f4"
+        },
+        body: JSON.stringify({
+            savedata: saveData
+        })
+    })
+    .then(res => {
+        saveBtn.disabled = false;
+        if (!res.ok) {
+            throw new Error("HTTP " + res.status);
+        }
+        return res.json();
+    })
+    .then(data => {
+        console.log("Cloud save success:", data);
+        alert("Saved to cloud!");
+    })
+    .catch(err => {
+        console.error("Cloud save failed:", err);
+        alert("Cloud save failed. Local save kept.");
+    });
+}
+
+
+window.addEventListener("beforeunload", () => {
+    saveToApi();
+});
+
+let guestLogin = document.querySelectorAll('.guest-login');
+guestLogin.forEach(btn => {
+    btn.addEventListener('click', () => {
+        localStorage.setItem("accountId", "Guest");
+        setActiveMainTab('home');
+    });
+});
+
+const saveBtn = document.querySelector('#save-btn');
+saveBtn.addEventListener('click', () => {
+    saveBtn.disabled = true;
+    saveToApi();
+});
 
 document.addEventListener('click', () => {
     new Audio('audio/click.wav').play();
@@ -1886,7 +2088,7 @@ if (currentChapter == 1) {
 archiveBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
         let text = archiveText[i]
-        if ((!(currentChapter > 1) && i == 0 || i== 6) || (!(currentChapter > 2) && i == 1) || (!(currentChapter > 3) && i == 2)) {
+        if ((!(currentChapter > 1) && (i == 0 || i== 6)) || (!(currentChapter > 2) && i == 1) || (!(currentChapter > 3) && i == 2)) {
             text = "You have not played this chapter";
         }
         archiveContent.innerHTML = text;

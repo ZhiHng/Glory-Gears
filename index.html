@@ -16,7 +16,7 @@
 <body>
     <section id="login" class="tab-content">
         <div class="login-signup">
-            <form action="#home" method="get">
+            <form id="login-form">
             <div class="logo-section">
                 <img src="images/studioLogo.png" alt="Imbalanced Skillset Studio Logo">
             </div>
@@ -30,7 +30,7 @@
                 <input type="password" id="password-login" name="password" required placeholder="Password">
             </div>
             <div class="button-row">
-                <button type="submit" class="enter-details">Login</button> 
+                <button type="submit" class="enter-details" id="submit-login">Login</button> 
                 <button type="button" class="guest-login">Continue As Guest</button>
             </div>
             </form>
@@ -41,7 +41,7 @@
     <section id="signup" class="tab-content">
         
         <div class="login-signup">
-            <form action="#login" method="get">
+            <form id="signup-form">
             <div class="logo-section">
                 <img src="images/studioLogo.png" alt="Imbalanced Skillset Studio Logo">
             </div>
@@ -55,7 +55,7 @@
                 <input type="password" id="password-signup" name="password" required placeholder="Password">
             </div>
             <div class="button-row">
-                <button type="submit" class="enter-details">Login</button> 
+                <button type="submit" class="enter-details" id="submit-signup">Sign Up</button> 
                 <button type="button" class="guest-login">Continue As Guest</button>
             </div>
             </form>
@@ -71,6 +71,7 @@
             <a href=#explore class="tab-link" id="explore-btn">Explore</a>
             <a href=#shop class="tab-link" id="shop-btn">Shop</a>
         </nav>
+        <button id="save-btn">Save</button>
     </section>
     <section id="inventory" class="tab-content">
         <div class="inventory-header">
