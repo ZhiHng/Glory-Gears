@@ -207,7 +207,6 @@ function saveToApi() {
     });
 }
 
-
 window.addEventListener("beforeunload", () => {
     saveToApi();
 });
