@@ -225,6 +225,50 @@ saveBtn.addEventListener('click', () => {
     saveToApi();
 });
 
+document.addEventListener("keydown", function(event) {
+    let targetId = '';
+    switch (event.key) {
+        case '1':
+            targetId = 'login';
+            break;
+        case '2':
+            targetId = 'signup';
+            break;
+        case '3':
+            targetId = 'home';
+            break;
+        case '4':
+            targetId = 'shop';
+            break;
+        case '5':
+            targetId = 'story';
+            break;
+        case '6':
+            targetId = 'explore';
+            break;
+        case '7':
+            targetId = 'inventory';
+            break;
+        case '8':
+            targetId = 'archive';
+            break;
+        case '9':
+            addInventory({ type: "weapon", key: "crystalPiercer", item: weapons.crystalPiercer});
+            addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver});
+            addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs});
+        case '0':
+            console.log(inventory);
+            console.log(player);
+            break;
+        default:
+            break;
+    }
+    setActiveMainTab(targetId);
+    window.scrollTo({top: 0});
+});
+
+
+
 document.addEventListener('click', () => {
     new Audio('audio/click.wav').play();
 });
@@ -1259,6 +1303,7 @@ invBtn.addEventListener('click', () => {
     previousTab = 'home'
 });
 archiveBtn.addEventListener('click', () => {
+    currentChapter = player.chapter;
     previousTab = 'home'
 });
 storyBtn.addEventListener('click', () => {
