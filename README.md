@@ -16,7 +16,7 @@ This website is for people ages 12+ (due to some violent content in the story) w
 - As an Exploiter, I would want to have the medium to complete tasks and progress at the most efficient way, so that I can feel rewarded by using strategy.
     - We targeted these players by having weapon elements, range, passive, enchantment passive in which will have different damage outcomes based on the enemy. The faster they can clear enemies and not die, the faster they can get rewards, improve their equipement and progress in the game.
 ### Wireframe
-[Website Wireframe](https://www.figma.com/design/F2A8WKCFqieAh2nST6zW2N/Glory-Gears-Prototype?node-id=0-1&t=WyxdrUPznXFtRLhM-1)
+[Website Wireframe](https://www.figma.com/design/CDpWFmS9PjIX57gw7NC70A/IP-Website-Wireframe?node-id=0-1&t=1apYYrgEXNuZRr6l-1)
 ## Features
 ### Existing Features
 1. Login and Sign Up page allows users to create a new account or sign up for a new account by inputing up their details. Logging in can recover previous progress made.
