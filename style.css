@@ -17,7 +17,8 @@
 }
 
 .inventory-header h2, .shop-header h2 {
-    margin-left: 5%;
+    margin-left: 3rem;
+    margin-top: 2rem;
     color: #ffffff;
     font-size: 2rem;
     text-transform: uppercase;
@@ -29,7 +30,7 @@
 }
 
 .info-box {
-    margin-left: 5%;
+    margin-left: 3rem;
     background: rgba(27, 31, 42, 0.8);
     backdrop-filter: blur(4px);
     padding: 15px 20px;
@@ -47,7 +48,7 @@
 }
 
 .scrollable-section {
-    margin-left: 5%;
+    margin-left: 3rem;
     height: 65vh; 
     width: 40%;
     padding: 40px;
@@ -77,8 +78,8 @@
 
 .back-btn {
     position: absolute;
-    top: 5.5vh;
-    right: 5%;
+    top: 3rem;
+    right: 3rem;
     background: linear-gradient(135deg, #252931 0%, #2c3140 100%);
     color: #e0e0e0;
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -112,7 +113,7 @@
 
 .preview-info {
     position: absolute;
-    right: 5%;
+    right: 3rem;
     top: 15vh;
     width: 30%;
     height: 77vh;
@@ -353,7 +354,7 @@ nav {
 }
 
 .sub-tab-link:first-child {
-    margin-left: 5%;
+    margin-left: 3rem;
 }
 
 .sub-tab-link:hover {
@@ -724,7 +725,7 @@ a.tab-link#li-btn {
 }
 
 #archive {
-    padding: 40px;
+    padding: 3rem;
     height: 100vh;
     background: rgba(27, 31, 42, 0.8);
     display: flex;
@@ -762,7 +763,7 @@ a.tab-link#li-btn {
     gap: 10px;
     overflow-y: auto;
     padding-right: 10px;
-    height: 50vh;
+    height: 60vh;
 }
 
 .archive-item {
@@ -824,7 +825,7 @@ a.tab-link#li-btn {
 }
 
 .text-box {
-    margin-left: 21%;
+    margin: 0 auto;
     margin-top: 10vh;
     width: 60%; 
     max-width: 800px;

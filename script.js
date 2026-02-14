@@ -15,7 +15,7 @@ const inventory = {
 };
 
 loadLocal()
-
+/*
 // API
 document.addEventListener("DOMContentLoaded", function () {
     
@@ -211,7 +211,7 @@ function saveToApi() {
 window.addEventListener("beforeunload", () => {
     saveToApi();
 });
-
+*/
 let guestLogin = document.querySelectorAll('.guest-login');
 guestLogin.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1485,6 +1485,10 @@ enchantBtn.addEventListener('click', () => {
             playAudio('audio/enchant.wav');
             alert(`You enchant the weapon with a ${materials[gemKey].name} and gained the passive effect: ${passiveAdded}`);
             inventory.weapons[currentInventoryEntry.key].passive = passiveAdded;
+            if (!inventory.materials[gemKey]) {
+                btn.disabled = true;
+                btn.style.opacity = 0.4;
+            }
         });
     });
 });
