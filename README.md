@@ -56,9 +56,15 @@ This website is for people ages 12+ (due to some violent content in the story) w
 ## Testing
 - Login Page / Sign Up Page:
     1. Click on the sign up button. See if it brings you to the sign up page.
-    2. Enter the email and password in the sign up page and sign up. See if it brings you into the game
-    3. Progress in the game and relaunch the website and log in with the same email and password. See if you still have the items you had before.
-    4. See it mouse clicks plays audio of a click sound.
+    2. Enter a username and password in the sign up page and sign up. See if it brings you into the game with a fresh account with no weapons or materials.
+    3. Progress in the game and click save on the home page. See if website alerts Cloud save successful.
+    4. Relaunch the website and create another account by signing up with a different username and password. See if it brings you into the game with a fresh account with no weapons or materials.
+    5. Progress in the new account but get different weapons and materials from the previous account. Save in the home page. See if website alerts Cloud save successful.
+    6. Relaunch the website and login with the first account username and password. See if inventory is the same as the first account and progress is the same.
+    7. Progress more in the game and relauch the website without saving. See if wesbsite alerts save successful or not successful (more likely due to API calls when closing website being more unreliable).
+    8. If not successful. See if website alerts, saved data locally.
+    9. Relaunch website and click continue as guest. See if progress remains the same.
+    10. See if mouse clicks plays audio of a click sound.
 - Story
     1. Click on the story button in the home page. See if it brings you to the loading screen.
     2. Progress the story by clicking on the buttons for descisions. See if the audio, background and text change.
@@ -125,7 +131,7 @@ This website is for people ages 12+ (due to some violent content in the story) w
 
 ## Credits
 ### Content
-References of Genshin Impact character Arlecchino's real name, Peruare in the storyboard of the game.
+References of Genshin Impact character Arlecchino's real name, Peruere in the storyboard of the game.
 
 ### Images
 The photos used in this site were obtained from ...
