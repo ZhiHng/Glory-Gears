@@ -15,7 +15,7 @@ const inventory = {
 };
 
 loadLocal()
-/*
+
 // API
 document.addEventListener("DOMContentLoaded", function () {
     
@@ -211,7 +211,7 @@ function saveToApi() {
 window.addEventListener("beforeunload", () => {
     saveToApi();
 });
-*/
+
 let guestLogin = document.querySelectorAll('.guest-login');
 guestLogin.forEach(btn => {
     btn.addEventListener('click', () => {
