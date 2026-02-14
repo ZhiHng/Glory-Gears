@@ -173,8 +173,11 @@ function saveToApi() {
     saveLocal();
 
     const accountId = localStorage.getItem("accountId");
-    if (!accountId || accountId === "Guest") return;
-
+    if (!accountId || accountId === "Guest") {
+        alert('No account signed in');
+        saveBtn.disabled = false;
+        return;
+    };
     const saveData = buildSaveData();
 
     fetch(`https://glorygears-4a39.restdb.io/rest/accounts/${accountId}`, {
@@ -320,48 +323,6 @@ sublinks.forEach(link => {
         parentTab.querySelector(`#${targetId}`)?.classList.add('active');
         link.classList.add('active');
     });
-});
-
-document.addEventListener("keydown", function(event) {
-    let targetId = '';
-    switch (event.key) {
-        case '1':
-            targetId = 'login';
-            break;
-        case '2':
-            targetId = 'signup';
-            break;
-        case '3':
-            targetId = 'home';
-            break;
-        case '4':
-            targetId = 'shop';
-            break;
-        case '5':
-            targetId = 'story';
-            break;
-        case '6':
-            targetId = 'explore';
-            break;
-        case '7':
-            targetId = 'inventory';
-            break;
-        case '8':
-            targetId = 'archive';
-            break;
-        case '9':
-            addInventory({ type: "weapon", key: "crystalPiercer", item: weapons.crystalPiercer});
-            addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver});
-            addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs});
-        case '0':
-            console.log(inventory);
-            console.log(player);
-            break;
-        default:
-            break;
-    }
-    setActiveMainTab(targetId);
-    window.scrollTo({top: 0});
 });
 
 //---------------GAME LOGIC----------------
