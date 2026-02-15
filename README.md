@@ -82,6 +82,7 @@ This website is for people ages 12+ (due to some violent content in the story) w
     9. Find a Fight Scene and click flee. See if it bring you to another screen with 2 backgrounds.
     10. Find a scene where player scavenges. See if inventory has the item gained.
     11. Explore through 5 scenes, see if you become tired and return to home screen automatically.
+    12. Scavenge or get materials from fights when you have 5 different materials. See if you are not able to pick them up.
 - Shop
     1. Click on the shop button in the home page. See if it opens the shop menu and audio plays.
     2. Click on the sell and buy buttons. See if it changes between buy and sell.
@@ -89,6 +90,7 @@ This website is for people ages 12+ (due to some violent content in the story) w
     4. Click on the buy button. See if website alerts you not enough gold.
     5. Get an item from explore and go to the sell menu. Click on sell 1 or sell all. See if gold count goes up and audio playes.
     6. Buy an item and see if it shows in the inventory or the sell menu.
+    7. Buy an item when you have 5 different materials already. See if website does not allow you to buy.
 - Inventory 
     1. Click on the inventory button in the home page. See if it opens the inventory menu and audio plays.
     2. Click on the weapons and materials buttons. See if it changes between weapons and materials.

@@ -22,11 +22,11 @@
             </div>
             <h2>Login</h2>
             <div class="input-group">
-                <label for="username"></label>
+                <label for="username-login"></label>
                 <input type="text" id="username-login" name="username" required placeholder="Name">
             </div>
             <div class="input-group">
-                <label for="password"></label>
+                <label for="password-login"></label>
                 <input type="password" id="password-login" name="password" required placeholder="Password">
             </div>
             <div class="button-row">
@@ -47,11 +47,11 @@
             </div>
             <h2>Sign Up</h2>
             <div class="input-group">
-                <label for="username"></label>
+                <label for="username-signup"></label>
                 <input type="text" id="username-signup" name="username" required placeholder="Name">
             </div>
             <div class="input-group">
-                <label for="password"></label>
+                <label for="password-signup"></label>
                 <input type="password" id="password-signup" name="password" required placeholder="Password">
             </div>
             <div class="button-row">
@@ -62,7 +62,7 @@
             <a href=#login class="tab-link" id="li-btn">Login</a>
         </div>
     </section> 
-    <section id="home" class="tab-content">
+    <div id="home" class="tab-content">
         <div class="bghome"></div>
         <nav>
             <a href=#inventory class="tab-link" id="inv-btn">Inventory</a>
@@ -72,7 +72,7 @@
             <a href=#shop class="tab-link" id="shop-btn">Shop</a>
         </nav>
         <button id="save-btn">Save</button>
-    </section>
+    </div>
     <section id="inventory" class="tab-content">
         <div class="inventory-header">
             <h2>Inventory</h2>
@@ -81,7 +81,7 @@
             </div>
             <button class="back-btn">Back</button>
         </div>
-        <section id="inventoryweapon" class="sub-tab-content">
+        <div id="inventoryweapon" class="sub-tab-content">
             <a class="sub-tab-link">Weapons</a><a class="sub-tab-link" href=#inventorymaterial>Materials</a>
             <div class="scrollable-section inv-weapon">
                 <div class="weapon-img"></div>
@@ -95,29 +95,29 @@
                 <div class='weapon-img'></div>
                 <div class='weapon-img'></div>
             </div>
-        </section>
-        <section id="inventorymaterial" class="sub-tab-content">
+        </div>
+        <div id="inventorymaterial" class="sub-tab-content">
             <a class="sub-tab-link" href=#inventoryweapon>Weapons</a><a class="sub-tab-link">Materials</a>
             <div class="scrollable-section">
                 <!--Using JavaScript to add <div> with class="material-img"-->
             </div>
-        </section>
-        <section class="preview-info">
+        </div>
+        <div class="preview-info">
             <div class="item-img"></div>
             <div class="side-by-side">
                 <button class="inv-weapon-btn">Equip</button><button class="inv-weapon-btn">Enchant</button><button class="inv-weapon-btn">Clean</button>
             </div>
             <div class="item-details"><!--For enchant, will use JavaScript to add <button> with class="enchant-opt"--></div>
-        </section>
+        </div>
     </section>
-    <section id="story" class="tab-content">
+    <div id="story" class="tab-content">
         <div id="story-bg"></div>
         <div class="text-box" id="story-text"></div>
         <div class="options-container">
             <button class="story-options" id="story-btn-1">Option 1</button><button class="story-options" id="story-btn-2">Option 2</button>
         </div>
-    </section>
-    <section id="explore" class="tab-content">
+    </div>
+    <div id="explore" class="tab-content">
         <div class="bg-explore" id="bg-explore1"></div>
         <div class="bg-explore" id="bg-explore2"></div>
         <div class="text-box" id="explore-text">
@@ -126,7 +126,7 @@
         <div class="options-container">
             <button class="explore-option">Grassy Plains</button><button class="explore-option">Cave</button><button class="explore-option">Go back to town</button>
         </div>
-    </section>
+    </div>
     <section id="shop" class="tab-content">
         <div class="shop-header">
             <h2>Shop</h2>
@@ -135,7 +135,7 @@
             </div>
             <button class="back-btn">Back</button>
         </div>
-        <section id="shopbuy" class="sub-tab-content">
+        <div id="shopbuy" class="sub-tab-content">
             <a class="sub-tab-link">Buy</a><a class="sub-tab-link" href=#shopsell>Sell</a>
             <div class="scrollable-section">
                 <div class='buy-item'></div>
@@ -147,22 +147,22 @@
                 <div class='buy-item'></div>
                 <div class='buy-item'></div>
             </div>
-        </section>
-        <section id="shopsell" class="sub-tab-content">
+        </div>
+        <div id="shopsell" class="sub-tab-content">
             <a class="sub-tab-link" href=#shopbuy>Buy</a><a class="sub-tab-link">Sell</a>
             <div class="scrollable-section">
                 <!--Using JavaScript to add <div> with class="sell-item"-->
             </div>
-        </section>
-        <section class="preview-info">
+        </div>
+        <div class="preview-info">
             <div class="item-img"></div>
             <div class="item-details"></div>
             <div class="side-by-side">
                 <button class="shop-buy-sell"></button><button class="shop-buy-sell"></button>
             </div>            
-        </section>
+        </div>
         <div id="gold-preview">
-            <image src="images/materials/coin.jpeg" style="width: 20px; height: auto;" alt="Image of a coin"></image>  
+            <img src="images/materials/coin.jpeg" style="width: 20px; height: auto;" alt="Image of a coin">
         </div>
     </section>
     <section id="archive" class="tab-content">
@@ -181,12 +181,13 @@
                 <button class="archive-item">Chapter 6: Final Clash</button>
                 <button class="archive-item">Heroes Battle</button>
             </div>
-        <div id="archive-content"></div>
+            <div id="archive-content"></div>
+        </div>
     </section>
     <section id="loadingscreen" class="tab-content">
         <div class="chapter-container">
             <p id="chapter-no"></p>
-            <h1 id="chapter-name"></h1>
+            <h1 id="chapter-name">Chapter</h1>
         </div>
         <div class="loading-status">
         <span>Loading...</span>

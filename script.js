@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        //Check if account details match up
         if (accountData.username.includes(usernameLogin)) {
             let index = accountData.username.indexOf(usernameLogin);
 
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 inventory.materials = accountData.savedata[index].inventory.materials || {};
                 currentChapter = player.chapter;
 
-                localStorage.setItem("accountId", accountData.accountId[index]);
+                localStorage.setItem("accountId", accountData.accountId[index]); //Save account id
                 localStorage.removeItem("gloryGearsSave");
                 localStorage.setItem("gloryGearsSave", JSON.stringify(buildSaveData()));
                 saveLocal();
@@ -181,7 +182,7 @@ function saveToApi() {
     const saveData = buildSaveData();
 
     fetch(`https://glorygears-4a39.restdb.io/rest/accounts/${accountId}`, {
-        method: "PATCH",
+        method: "PATCH", //PUT does not work for some reason.
         headers: {
             "Content-Type": "application/json",
             "x-apikey": "698efea6bf4bccdbda53e4f4"
@@ -207,7 +208,7 @@ function saveToApi() {
     });
 }
 
-window.addEventListener("beforeunload", () => {
+window.addEventListener("beforeunload", () => { //Try to autosave save when closing website
     saveToApi();
 });
 
@@ -225,58 +226,16 @@ saveBtn.addEventListener('click', () => {
     saveToApi();
 });
 
-document.addEventListener("keydown", function(event) {
-    let targetId = '';
-    switch (event.key) {
-        case '1':
-            targetId = 'login';
-            break;
-        case '2':
-            targetId = 'signup';
-            break;
-        case '3':
-            targetId = 'home';
-            break;
-        case '4':
-            targetId = 'shop';
-            break;
-        case '5':
-            targetId = 'story';
-            break;
-        case '6':
-            targetId = 'explore';
-            break;
-        case '7':
-            targetId = 'inventory';
-            break;
-        case '8':
-            targetId = 'archive';
-            break;
-        case '9':
-            addInventory({ type: "weapon", key: "crystalPiercer", item: weapons.crystalPiercer});
-            addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver});
-            addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs});
-        case '0':
-            console.log(inventory);
-            console.log(player);
-            break;
-        default:
-            break;
-    }
-    setActiveMainTab(targetId);
-    window.scrollTo({top: 0});
-});
-
-
-
 document.addEventListener('click', () => {
     new Audio('audio/click.wav').play();
 });
 
+//For legendary weapon usage
 let cpRecharge = 0;
 let icRecharge = 0;
 let taRecharge = 0;
 
+//---------------Tab changing-----------------
 const links = document.querySelectorAll('.tab-link');
 const contents = document.querySelectorAll('.tab-content');
 
@@ -369,7 +328,7 @@ sublinks.forEach(link => {
 });
 
 //---------------GAME LOGIC----------------
-//STORY
+//STORY OBJECT
 const story = {
     chapter1_1: {
         title: "A Strange Sword",
@@ -870,20 +829,21 @@ const shopPool = [
     { key: "crystal", category: "materials", object: materials.crystal },
 ];
 
-
+//Get random reward from rewardPool. Chances based on price of the item.
 function getReward() {
     const weights = rewardPool.map(r => 1 / r.item.price);
-    const totalWeight = weights.reduce((sum, w) => sum + w, 0);
-    let roll = Math.random() * totalWeight;
+    const totalWeight = weights.reduce((sum, w) => sum + w, 0); //total up the weightage
+    let roll = Math.random() * totalWeight; //Get a number in the weightage
 
-    for (let i = 0; i < rewardPool.length; i++) {
+    for (let i = 0; i < rewardPool.length; i++) { //Check cumulatively if the number rolled falls within the range of the reward weightage
         roll -= weights[i];
         if (roll <= 0) {
             return rewardPool[i];
         }
     }
 }
-//PASSIVES
+
+//PASSIVES FOR ENCHANT
 const passives = {
     flameGem: {
         "1": "Damage increases by 5%",
@@ -982,7 +942,7 @@ function determineWin(enemyDamage, enemyElement, enemyRange) {
     }
 }
 
-//EXPLORE GENERATION
+//EXPLORE SCENES
 const encounters = {
     grasslands: {
         traderGold: {
@@ -1235,6 +1195,7 @@ const encounters = {
     }
 };
 
+//Helper function to get a random item from an object
 function getRandomKeyFromObj(object) {
     let keys = Object.keys(object);
     let randomKey = keys[Math.floor(Math.random() * keys.length)];
@@ -1257,25 +1218,26 @@ var energy = 5;
 
 let currentAudio;
 
-function playAudio(src) {
+function playAudio(src) { //Play audio and stopping the old one
     currentAudio?.pause();
     currentAudio = new Audio(src);
     currentAudio.play();
 }
 
-function setExploreButtons(texts = [], active = [true, true, true]) {
+function setExploreButtons(texts = [], active = [true, true, true]) { //Helper function to determine hte text of the buttons in explore and whether they are shown or hidden
     exploreOptionBtns.forEach((btn, i) => {
         btn.textContent = texts[i] || "";
         btn.classList.toggle('active', !!active[i]);
     });
 }
 
-function getRandomEncounterKey(location) {
+function getRandomEncounterKey(location) { //Get a random scene based on a location given which the player chose in the fork
     const keys = Object.keys(encounters[location]).filter(
-        k => !["text", "textOption", "audio", "image"].includes(k)
+        k => !["text", "textOption", "audio", "image"].includes(k) //Ensure the other keys are not counted in the randomisation of selection of scene
     );
     return keys[Math.floor(Math.random() * keys.length)];
 }
+
 //HOME BUTTONS
 exploreBtn.addEventListener('click', () => {
     setActiveMainTab('explore');
@@ -1290,8 +1252,7 @@ exploreBtn.addEventListener('click', () => {
         taRecharge++;
     }
     if (player.equipped == "crystalPiercer" || player.equipped == "infernalCleaver" || player.equipped == "tempestArcs") {
-        inventory.weapons[player.equipped].uses--;
-        
+        inventory.weapons[player.equipped].uses--; //Reduces legendary weapon uses.
     }
     getExploreFork()
 });
@@ -1362,7 +1323,7 @@ function resetInventoryWeapons() {
     const ownedKeys = Object.keys(inventory.weapons);
     const allKeys = Object.keys(weapons);
 
-    // Owned first
+    //Owned first
     const orderedKeys = [
         ...ownedKeys,
         ...allKeys.filter(k => !ownedKeys.includes(k)) //Everything else then ... to spread it into one array.
@@ -1372,18 +1333,17 @@ function resetInventoryWeapons() {
         const weapon = weapons[key];
         const owned = !!inventory.weapons[key];
 
-        const div = document.createElement('div');
+        const div = document.createElement('div'); //create div for the weapon for preview, sorted owned shown first.
         div.className = 'weapon-img';
 
         if (owned) {
             div.style.background = `url(${weapon.image}) center / contain no-repeat`;
         } else {
-            div.style.background = `url("images/icons/locked.png") center / contain no-repeat`;
-            div.classList.add('locked'); // optional CSS styling
+            div.style.background = `url("images/icons/locked.png") center / contain no-repeat`; //If not owned image is locked but text preview still shown
         }
 
         const entry = { key, category: "weapons", object: weapon, owned };
-        inventoryWeaponEntries.push(entry);
+        inventoryWeaponEntries.push(entry); //For references accross functions
 
         div.addEventListener('click', () => {
             currentInventoryEntry = entry;
@@ -1483,12 +1443,13 @@ enchantBtn.addEventListener('click', () => {
         <button class="enchant-opt">Frost Gem</button>
         <button class="enchant-opt">Shock Gem</button>
         <button class="enchant-opt">Energy Gem</button>
+        <button class="enchant-opt">Magic Orb</button>
     `;
 
-    previewText.forEach(div => div.innerHTML = enchantOptions);
+    previewText.forEach(div => div.innerHTML = enchantOptions); //create buttons when enchant in clicked
 
     document.querySelectorAll('.enchant-opt').forEach((btn, i) => {
-        let gemKey = "";
+        let gemKey = ""; //assign gem key variables to each button
         switch (i) {
             case 0:
                 gemKey = "crystal";
@@ -1505,11 +1466,14 @@ enchantBtn.addEventListener('click', () => {
             case 4:
                 gemKey = "energyGem";
                 break;
+            case 5:
+                gemKey = "magicOrb";
+                break;
             default:
                 break;
         }
 
-        if (!inventory.materials[gemKey]) {
+        if (!inventory.materials[gemKey]) { //if dont have the gem in inventory, disable button
             btn.disabled = true;
             btn.style.opacity = 0.4;
         }
@@ -1520,16 +1484,22 @@ enchantBtn.addEventListener('click', () => {
                 delete inventory.materials[gemKey];
             }
             let passiveAdded = "";
-            if (gemKey == "crystal") {
-                let category = getRandomKeyFromObj(passives);
-                passiveAdded = passives[category][getRandomKeyFromObj(category)];
+            let category = getRandomKeyFromObj(passives);
+            if (gemKey == "crystal" || gemKey == "magicOrb") {
+                passiveAdded = passives[category][getRandomKeyFromObj(category)]; //crystal and magic orb randomises the passives of all gems
             } else {
-                passiveAdded = passives[gemKey][getRandomKeyFromObj(passives[gemKey])];
+                passiveAdded = passives[gemKey][getRandomKeyFromObj(passives[gemKey])]; //other gems has narrower passive view for higher chance.
+            }
+            if (gemKey == "magicOrb") { //magic orb gives 3 enchantment passive at once
+                category = getRandomKeyFromObj(passives);
+                passiveAdded += `, ${passives[category][getRandomKeyFromObj(category)]}`;
+                category = getRandomKeyFromObj(passives);
+                passiveAdded += `, ${passives[category][getRandomKeyFromObj(category)]}`;
             }
             playAudio('audio/enchant.wav');
             alert(`You enchant the weapon with a ${materials[gemKey].name} and gained the passive effect: ${passiveAdded}`);
             inventory.weapons[currentInventoryEntry.key].passive = passiveAdded;
-            if (!inventory.materials[gemKey]) {
+            if (!inventory.materials[gemKey]) { //if no more of that gem after use, disable button
                 btn.disabled = true;
                 btn.style.opacity = 0.4;
             }
@@ -1543,7 +1513,7 @@ cleanBtn.addEventListener('click', () => {
     const key = currentInventoryEntry.key;
     const weaponState = inventory.weapons[key];
 
-    let soapCost = 0;
+    let soapCost = 0; //cleaning uses 5 sponge everytime and 10 soap for dirty, 5 soap for mild dirty
     const spongeCost = 5;
 
     if (weaponState.cleanliness === "Dirty") soapCost = 10;
@@ -1572,14 +1542,14 @@ cleanBtn.addEventListener('click', () => {
     if (weaponState.cleanliness === "Dirty") weaponState.cleanliness = "Mild Dirty";
     else if (weaponState.cleanliness === "Mild Dirty") weaponState.cleanliness = "Clean";
 
-    resetInventoryMaterials(); 
+    resetInventoryMaterials(); //refresh the divs to show the new item state and reset item preview text
     resetInventoryWeapons();
 
     resetItemPreview(currentInventoryEntry.object, true);
 });
 
 //EXPLORE
-let exploreContext = {};
+let exploreContext = {}; //needed for references accross functions
 
 function getExploreFork() {
     if (energy === 0) {
@@ -1698,9 +1668,9 @@ exploreOptionBtns.forEach((btn, i) => {
             setExploreButtons(["Continue", "", ""], [true, false, false]);
             exploreContext = {type: "continue"};
         } else if (exploreContext.type === "trade") {
-            if (i == 0) {
+            if (i == 0) { //trader buy/sell
                 openShop('explore');
-            } else if (i == 1) {
+            } else if (i == 1) { //trader trade
                 if (exploreContext.scene.includes("Gold")) {
                     if (inventory.materials.energyGem) {
                         inventory.materials.energyGem--;
@@ -1742,7 +1712,7 @@ exploreOptionBtns.forEach((btn, i) => {
                         alert(`You do not have enough materials.`);
                     }
                 }
-            } else if (i == 2) {
+            } else if (i == 2) { //trader leave
                 energy -= 1;
                 getExploreFork();
             }
@@ -1755,13 +1725,13 @@ function addInventory(reward) {
         player.gold += reward;
     } else if (reward.type === "weapon") {
         if (reward.key == "crystalPiercer" || reward.key == "infernalCleaver" || reward.key == "tempestArcs") {
-            inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None", uses: 3};
+            inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None", uses: 3}; //legendary weapons having usage limit only
         } else {
             inventory.weapons[reward.key] = { cleanliness: "Dirty", passive: "None" };
         }
         return `You picked up a ${reward.item.name}`;
     } else {
-        if (Object.keys(inventory.materials).length < 5) {
+        if (Object.keys(inventory.materials).length < 5 || inventory.materials[reward.key]) {
             if (!inventory.materials[reward.key]) {
                 inventory.materials[reward.key] = 1;
             } else {
@@ -1811,7 +1781,7 @@ function resetItemPreview(itemObject, owned = true) {
         
     });
     previewImg.forEach(div => {
-        if (itemObject.name == "Crystal Piercer") {
+        if (itemObject.name == "Crystal Piercer") { //only crystal piercer has dirt variants
             if (inventory.weapons.crystalPiercer?.cleanliness == "Clean") {
                 div.innerHTML = '<iframe title="Azurelight Model" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/7475b57704c44e66a31ab516b9f558a8/embed"> </iframe>'
             } else if (inventory.weapons.crystalPiercer?.cleanliness == "Mild Dirty") {
@@ -1839,7 +1809,7 @@ function resetItemPreview(itemObject, owned = true) {
 }
 
 buyItems.forEach((div, i) => {
-    const entry = shopPool[i];
+    const entry = shopPool[i]; //shop only has a fixed number of items
 
     div.style.background = `url(${entry.object.image}) center / contain no-repeat`;
 
@@ -1906,7 +1876,7 @@ function updateShopButtons() {
 }
 
 
-shopActionBtns.forEach((btn, i) => {
+shopActionBtns.forEach((btn, i) => { //function changes based on the shop page
     btn.addEventListener('click', () => {
         if (!currentPreviewEntry) return;
 
@@ -2043,7 +2013,7 @@ shopSellTab.addEventListener('click', (e) => {
 const backBtn = document.querySelectorAll('.back-btn');
 var previousTab = '';
 
-function openShop(lastTab) {
+function openShop(lastTab) { //Ensures if opened shop from explore trader, it goes back there when leaving
     previousTab = lastTab;
     setActiveMainTab('shop');
 
@@ -2057,7 +2027,7 @@ function openShop(lastTab) {
     playAudio('audio/bell.wav');
 }
 
-backBtn.forEach(but => {
+backBtn.forEach(but => { //return to tab that was opened from (needed for shop)
     but.addEventListener('click', () => {
         setActiveMainTab(previousTab);
     });
@@ -2088,7 +2058,7 @@ const archiveText = [
 
 var currentChapter = player.chapter;
 
-if (currentChapter == 1) {
+if (currentChapter == 1) { //default is not unlocked
     archiveContent.innerHTML = "You have not played this chapter";
 } else {
     archiveContent.innerHTML = archiveText[0];
@@ -2097,7 +2067,7 @@ if (currentChapter == 1) {
 archiveBtns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
         let text = archiveText[i]
-        if ((!(currentChapter > 1) && (i == 0 || i== 6)) || (!(currentChapter > 2) && i == 1) || (!(currentChapter > 3) && i == 2)) {
+        if ((!(currentChapter > 1) && (i == 0 || i== 6)) || (!(currentChapter > 2) && i == 1) || (!(currentChapter > 3) && i == 2)) { //if not played chapter, cannot unlock
             text = "You have not played this chapter";
         }
         archiveContent.innerHTML = text;
@@ -2111,7 +2081,7 @@ const btn2 = document.querySelector('#story-btn-2');
 var pendingChapterRewards = [];
 
 function startStory() {
-    if (currentChapter > 3) {
+    if (currentChapter > 3) { //currently only 3 chapters with storyboard due to 3 3D models only
         alert('Stay tuned for more future content!')
         setActiveMainTab('home');
         return;
@@ -2120,7 +2090,7 @@ function startStory() {
 }
 
 function showStoryNode(sceneKey) {
-    if (sceneKey === "chapter1_1_1") {
+    if (sceneKey === "chapter1_1_1") { //story scenes that gives rewards
         queueChapterReward(5);
     } else if (sceneKey === "chapter1_2_1") {
         queueChapterReward(15);
@@ -2136,7 +2106,7 @@ function showStoryNode(sceneKey) {
 
     storyBg.style.background = `url(${key.image}) center / cover no-repeat`;
 
-    storyText.innerHTML = key.text.map(line => `<br>${line}<br>`).join("") + "<br>";
+    storyText.innerHTML = key.text.map(line => `<br>${line}<br>`).join("") + "<br>"; //joins the story text from the object together
 
     const choices = key.choices;
 
@@ -2162,7 +2132,7 @@ function showStoryNode(sceneKey) {
 
 function handleStoryChoice(nextKey) {
 
-    if (nextKey.startsWith("fight_")) {
+    if (nextKey.startsWith("fight_")) { //if fight scene, changes to fight scene
         startFight(nextKey);
         return;
     }
@@ -2189,7 +2159,7 @@ function startFight(fightKey) {
 
 function openCombat(key, object) {
     let [enemyDmg, enemyElement, enemyRange] = [0, 0, 0];
-    if (key == "fight_chapter2_1_1") {
+    if (key == "fight_chapter2_1_1") { //fight scenes based on story scenes it came from
         enemyDmg = 125;
         enemyElement = "Fire";
         enemyRange = "Long";
@@ -2210,7 +2180,7 @@ function openCombat(key, object) {
     btn1.textContent = "Fight";
     btn1.onclick = () => {
         playAudio('audio/sword.wav');
-        if (determineWin(enemyDmg, enemyElement, enemyRange) === "Win") {
+        if (determineWin(enemyDmg, enemyElement, enemyRange) === "Win") { //rewards from story
             queueChapterReward(getReward());
             queueChapterReward(getReward());
             queueChapterReward(getReward());
@@ -2228,7 +2198,7 @@ function completeChapter() {
 
     pendingChapterRewards.forEach(reward => addInventory(reward));
     pendingChapterRewards = [];
-    if (currentChapter == 1) {addInventory({ type: "weapon", key: "crystalPiercer", item: weapons.crystalPiercer})};
+    if (currentChapter == 1) {addInventory({ type: "weapon", key: "crystalPiercer", item: weapons.crystalPiercer})}; //update chapter completion
     if (currentChapter == 2) {addInventory({ type: "weapon", key: "infernalCleaver", item: weapons.infernalCleaver})};
     if (currentChapter == 3) {addInventory({ type: "weapon", key: "tempestArcs", item: weapons.tempestArcs})};
     currentChapter++;
@@ -2246,7 +2216,7 @@ function restartChapter() {
     btn2.style.display = "none";
     btn1.textContent = "Continue";
     btn1.onclick = () => {
-        pendingChapterRewards = [];
+        pendingChapterRewards = []; //doesnt give reward if chapter not completed. Rewards only credited when completing chapter
         currentStoryNode = `chapter${currentChapter}_1`;
         setActiveMainTab('home');
         chapterInProgress = false;
@@ -2273,7 +2243,7 @@ function playLoadingScreen() {
     currentStoryNode = `chapter${currentChapter}_1`;
     chapterNo.innerHTML = `<u>Chapter ${currentChapter}</u>`
     chapterName.innerHTML = `<b>${story[currentStoryNode].title}</b>`;
-    setTimeout(() => {
+    setTimeout(() => { //timer for loading screen to show lottie
         setActiveMainTab('story');
         chapterInProgress = true;
         showStoryNode(currentStoryNode);
@@ -2296,12 +2266,12 @@ function buildSaveData() {
   };
 }
 
-function saveLocal() {
+function saveLocal() { //save game data locally
   const saveData = buildSaveData();
   localStorage.setItem('gloryGearsSave', JSON.stringify(saveData));
 }
 
-function loadLocal() {
+function loadLocal() { //load save data from local storage
   const data = localStorage.getItem('gloryGearsSave');
   if (!data) return false;
 
