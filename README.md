@@ -132,6 +132,7 @@ This website is for people ages 12+ (due to some violent content in the story) w
     - Save Data stored on API
 
 ## Credits
+[References Document](https://connectnpedu-my.sharepoint.com/:w:/g/personal/s10271139_connect_np_edu_sg/IQAZ9RVv_kOeRpwvB-F5ubcFAa0av53p6PfdYXdgcFYhKyo?e=TociX5)
 ### Content
 References of Genshin Impact character Arlecchino's real name, Peruere in the storyboard of the game.
 
